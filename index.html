@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conexzion - Roles Admin/Lider - Slate Light</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{ --bg:#F8FAFC; --card:#FFFFFF; --border:#E2E8F0; --text:#0F172A; --text-sec:#64748B; --accent:#0F172A; --accent-hover:#1E293B; }
+*{ -webkit-font-smoothing: antialiased; box-sizing:border-box; }
+body{font-family:'Inter',system-ui; background: var(--bg); color: var(--text); margin:0; line-height:1.5;}
+.h-title{ font-weight:900; font-size:15px; letter-spacing:-0.01em; color:var(--text); }
+.h-subtitle{ font-weight:700; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-sec); }
+.h-caption{ font-weight:500; font-size:11px; color:var(--text-sec); }
+.card{ background: var(--card); border:1px solid var(--border); border-radius:16px; transition: border-color 0.2s; }
+.card:hover{ border-color:#CBD5E1; }
+.card12{ background: var(--card); border:1px solid var(--border); border-radius:12px; transition: all 0.2s; }
+.card12:hover{ border-color:#CBD5E1; transform: translateY(-1px); box-shadow:0 4px 12px rgba(15,23,42,0.06); }
+.btn-primary{ background: var(--accent); color:white; border:1px solid var(--accent); border-radius:12px; font-weight:700; font-size:12px; padding:10px 18px; display:inline-flex; align-items:center; justify-content:center; gap:6px; transition: all 0.2s; box-shadow:0 1px 2px rgba(0,0,0,0.05); }
+.btn-primary:hover{ background: var(--accent-hover); transform: translateY(-1px); box-shadow:0 4px 12px rgba(15,23,42,0.15); }
+.btn-secondary{ background: var(--card); color:var(--text); border:1px solid var(--border); border-radius:12px; font-weight:600; font-size:11px; padding:9px 16px; display:inline-flex; align-items:center; gap:6px; transition: all 0.2s; }
+.btn-secondary:hover{ background:#F8FAFC; border-color:#CBD5E1; }
+.btn-whatsapp{ background:#0F172A; color:white; border:1px solid #0F172A; border-radius:12px; font-weight:700; font-size:11px; padding:10px 16px; display:inline-flex; align-items:center; gap:7px; transition: all 0.2s; }
+.btn-whatsapp:hover{ background:#1E293B; transform: translateY(-1px); box-shadow:0 4px 12px rgba(15,23,42,0.2); }
+.btn-edit{ background:white; color:#0F172A; border:1.5px solid #E2E8F0; border-radius:9999px; font-weight:600; font-size:11px; padding:8px 16px; display:inline-flex; align-items:center; gap:5px; transition: all 0.2s; }
+.btn-edit:hover{ background:#F8FAFC; border-color:#0F172A; transform: translateY(-1px); }
+.btn-delete{ background:#FEF2F2; color:#DC2626; border:1.5px solid #FECACA; border-radius:9999px; font-weight:600; font-size:11px; padding:8px 16px; display:inline-flex; gap:5px; transition: all 0.2s; }
+.btn-delete:hover{ background:#FEE2E2; border-color:#FCA5A5; }
+.btn-desact{ background:#F8FAFC; color:#64748B; border:1.5px solid #E2E8F0; border-radius:9999px; font-weight:600; font-size:11px; padding:8px 16px; }
+.badge{ font-size:10px; font-weight:700; padding:3px 9px; border-radius:9999px; border:1px solid; }
+.avatar{ width:40px; height:40px; border-radius:10px; display:grid; place-items:center; font-weight:800; font-size:14px; color:white; background:var(--accent); flex-shrink:0; overflow:hidden; border:1px solid var(--border); }
+.avatar img{ width:100%; height:100%; object-fit:cover; }
+input, select, textarea{ background:white !important; border:1px solid var(--border) !important; border-radius:10px !important; color:var(--text) !important; font-size:13px !important; }
+input:focus, select:focus, textarea:focus{ border-color:var(--accent) !important; box-shadow:0 0 0 3px rgba(15,23,42,0.08) !important; outline:none !important; }
+.tab-active{ background: var(--accent); color:white; border-color:var(--accent); }
+.tab-inactive{ background: var(--card); color:var(--text-sec); border-color:var(--border); }
+.role-badge-admin{ background:#0F172A; color:white; border:1px solid #0F172A; }
+.role-badge-lider{ background:#F1F5F9; color:#0F172A; border:1px solid #E2E8F0; }
+@media (max-width: 640px){
+  .btn-primary, .btn-secondary, .btn-whatsapp{ width:100%; justify-content:center; padding:12px 18px; }
+  .btn-edit, .btn-delete, .btn-desact{ flex:1; justify-content:center; padding:10px 14px; }
+  #tabs{ -webkit-overflow-scrolling: touch; scrollbar-width:none; }
+  #tabs::-webkit-scrollbar{ display:none; }
+  main{ padding:12px !important; }
+}
+</style>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0F172A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Conexzion">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').then(()=>console.log('SW registered')).catch(()=>{});
+  });
+}
+</script>
+
+</head>
+<body>
+<div id="loginScreen" class="min-h-screen grid place-items-center p-4 bg-[#F8FAFC]">
+  <div class="bg-white rounded-[20px] border border-[#E2E8F0] p-7 max-w-[400px] w-full">
+    <div class="text-center mb-6"><div class="w-12 h-12 rounded-[12px] bg-[#0F172A] text-white grid place-items-center font-black mx-auto">C</div><div class="mt-3 font-black text-[18px] tracking-tighter">conexzion</div><div class="text-[10px] tracking-[0.2em] font-bold text-[#64748B]">MINISTERIO JUVENIL</div></div>
+    <div class="space-y-3">
+      <select id="userSelect" class="w-full px-4 py-3"><option value="">Selecciona tu nombre</option><option value="Luis Ivan jallo ccoyo">Luis Ivan jallo ccoyo</option><option value="Reyna Mejia">Reyna Mejia</option><option value="Maryoiry Leo Rafae Admin">Maryoiry Leo Rafae Admin</option><option value="Edwin Cusi">Edwin Cusi</option><option value="Ester Milagros">Ester Milagros</option><option value="Luz Victoria">Luz Victoria</option><option value="Emily Arlyn">Emily Arlyn</option><option value="Roy briceño">Roy briceño</option><option value="Geancarlo ynquel">Geancarlo ynquel</option><option value="Gustavo cruz">Gustavo cruz</option><option value="admin">Admin</option></select>
+      <input id="passInput" type="password" placeholder="Contraseña" class="w-full px-4 py-3"/>
+      <div id="loginError" class="text-xs text-red-500 hidden px-2"></div>
+      <button id="loginBtn" class="w-full py-3 btn-primary">Entrar</button>
+      <div class="text-[10px] text-[#94A3B8] text-center">Ministerio Juvenil • Conexzion</div>
+    </div>
+  </div>
+</div>
+
+<div id="appScreen" class="hidden min-h-screen">
+  <header class="sticky top-0 z-20 bg-white/90 backdrop-blur border-b border-[#E2E8F0]">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex gap-3 items-center">
+      <div class="flex items-center gap-2.5 shrink-0"><div class="w-8 h-8 rounded-[10px] bg-[#0F172A] text-white grid place-items-center font-black text-[13px]">C</div><div class="hidden sm:block"><div class="h-title !text-[14px] !leading-none">conexzion</div><div class="h-subtitle !text-[8px] !mt-0">MINISTERIO JUVENIL</div></div><span id="userBadge" class="ml-1 text-[10px] px-2.5 py-1 rounded-full border font-bold"></span></div>
+      <div class="flex-1 max-w-[500px] relative"><input id="globalSearch" oninput="onGlobalSearch(this.value)" placeholder="🔍 Buscar..." class="w-full pl-4 pr-8 py-2.5 !rounded-full !bg-[#F8FAFC]"/></div>
+      <button onclick="logout()" class="shrink-0 text-[11px] px-3 py-2 rounded-full border border-[#E2E8F0] bg-white">Salir</button>
+    </div>
+    <div class="max-w-6xl mx-auto px-3 sm:px-4 pb-3 flex gap-2 overflow-auto items-center" id="tabs"></div>
+    <div class="max-w-6xl mx-auto px-4 pb-3 flex gap-1.5 overflow-auto" id="savedFilters"></div>
+  </header>
+  <main class="max-w-6xl mx-auto p-3 sm:p-4" id="mainContent"></main>
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-[#0F172A] text-white text-[13px] px-5 py-2.5 rounded-full hidden z-50"></div>
+</div>
+
+<div id="modalLider" class="fixed inset-0 z-50 bg-[#0F172A]/20 backdrop-blur-sm hidden grid place-items-center p-3"><div class="bg-white rounded-[16px] w-full max-w-lg p-5 border border-[#E2E8F0] max-h-[90vh] overflow-auto"><h3 id="modalLiderTitle" class="h-title"></h3><div id="modalLiderBody" class="mt-4 grid gap-3"></div><div class="flex gap-2 mt-5"><button onclick="closeModalLider()" class="flex-1 py-2.5 btn-secondary">Cancelar</button><button onclick="saveLider()" class="flex-1 py-2.5 btn-primary">Guardar</button></div></div></div>
+<div id="modalJoven" class="fixed inset-0 z-50 bg-[#0F172A]/20 backdrop-blur-sm hidden grid place-items-center p-3"><div class="bg-white rounded-[16px] w-full max-w-2xl p-5 border border-[#E2E8F0] max-h-[90vh] overflow-auto"><h3 id="modalJovenTitle" class="h-title"></h3><div id="modalJovenBody" class="mt-4 grid gap-3"></div><div id="jovenHistory" class="mt-3 hidden"><div class="h-subtitle">Historial</div><div id="jovenHistoryList" class="mt-2 space-y-1 max-h-[100px] overflow-auto text-[11px]"></div></div><div class="flex gap-2 mt-5"><button onclick="closeModalJoven()" class="flex-1 py-2.5 btn-secondary">Cancelar</button><button onclick="saveJoven()" class="flex-1 py-2.5 btn-primary">Guardar • Auto-fecha</button></div></div></div>
+<div id="modalZona" class="fixed inset-0 z-50 bg-[#0F172A]/20 backdrop-blur-sm hidden grid place-items-center p-3"><div class="bg-white rounded-[16px] w-full max-w-md p-5 border"><h3 class="h-title">Nueva zona</h3><input id="zonaInput" placeholder="Ej: LAS FLORES" class="mt-4 w-full px-4 py-3"/><div class="flex gap-2 mt-5"><button onclick="closeModalZona()" class="flex-1 py-2.5 btn-secondary">Cancelar</button><button onclick="saveZona()" class="flex-1 py-2.5 btn-primary">Crear</button></div></div></div>
+<div id="modalCargoProg" class="fixed inset-0 z-50 bg-[#0F172A]/20 backdrop-blur-sm hidden grid place-items-center p-3"><div class="bg-white rounded-[16px] w-full max-w-md p-5 border"><h3 class="h-title">Añadir cargo</h3><input id="cargoInput" placeholder="Ej: Bienvenida" class="mt-4 w-full px-4 py-3"/><div class="flex gap-2 mt-5"><button onclick="closeModalCargo()" class="flex-1 py-2.5 btn-secondary">Cancelar</button><button onclick="saveCargo()" class="flex-1 py-2.5 btn-primary">Añadir</button></div></div></div>
+<div id="modalCumple" class="fixed inset-0 z-[60] bg-[#0F172A]/30 backdrop-blur-sm hidden grid place-items-center p-4"><div class="bg-white rounded-[16px] w-full max-w-md p-6 border shadow-xl"><div class="text-center"><div class="text-3xl">🎂</div><h3 class="h-title mt-2">¡Cumpleaños hoy!</h3><p id="cumpleModalText" class="text-[12px] text-[#64748B] mt-1"></p><div id="cumpleModalList" class="mt-4 space-y-2 text-left"></div><div class="flex gap-2 mt-5"><button onclick="closeCumpleModal()" class="flex-1 py-2.5 btn-secondary">Cerrar</button><button onclick="sendAllCumpleHoy()" class="flex-1 py-2.5 btn-primary">WhatsApp a todos</button></div></div></div></div>
+<div id="modalMassWA" class="fixed inset-0 z-50 bg-[#0F172A]/20 backdrop-blur-sm hidden grid place-items-center p-3"><div class="bg-white rounded-[16px] w-full max-w-lg p-5 border max-h-[90vh] overflow-auto"><h3 class="h-title">WhatsApp masivo</h3><p class="text-[11px] text-[#64748B] mt-1">Plantilla: usa {nombre}</p><textarea id="massWATemplate" rows="3" class="mt-3 w-full px-4 py-3">Hola {nombre}! Te escribe Conexzion. ¿Cómo estás? Queremos verte este domingo 🙏</textarea><div class="mt-3 text-[11px] text-[#64748B]"><span id="massWACount">0</span> jóvenes</div><div id="massWAPreview" class="mt-3 max-h-[200px] overflow-auto space-y-1"></div><div class="flex gap-2 mt-5"><button onclick="closeMassWA()" class="flex-1 py-2.5 btn-secondary">Cancelar</button><button onclick="sendMassWA()" class="flex-1 py-2.5 btn-primary">Abrir WhatsApp</button></div></div></div>
+<div id="modalReasign" class="fixed inset-0 z-[70] bg-[#0F172A]/30 backdrop-blur-sm hidden grid place-items-center p-4"><div class="bg-white rounded-[16px] w-full max-w-md p-6 border shadow-xl"><div class="text-center"><div class="w-12 h-12 mx-auto rounded-[12px] bg-[#0F172A] text-white grid place-items-center text-xl">♻️</div><h3 class="h-title mt-3">Reasignación mensual</h3><p class="text-[12px] text-[#64748B] mt-2">¿Reasignar aleatoriamente todos los jóvenes entre líderes activos? Esta acción es mensual y solo Admin puede hacerla.</p><div class="mt-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-[10px] p-3 text-[11px] text-left"><div>• Mantiene generales intactos</div><div>• Distribución equilibrada</div><div>• Guarda fecha de última reasignación</div></div><div class="flex gap-2 mt-5"><button onclick="closeReasignModal()" class="flex-1 py-2.5 btn-secondary">Cancelar</button><button onclick="confirmReasign()" class="flex-1 py-2.5 btn-primary">Sí, reasignar 🔀</button></div></div></div></div>
+
+<script>
+let RAW_JOVENES = [
+{"lider":"Edwin Cusi","joven":"Britany Herrera","edad":17,"cumple":"2005-02-02","celular":"980000001","telefono":"980000001","zona":"FRAGATAS - CANTO GRANDE","estado":"En seguimiento","ultimoContacto":"2026-08-09","direccion":"Jr. Las Fragatas 123","rol":"Estudiante","notas":"Nuevo contacto","esGeneral":false,"creador":"Edwin Cusi","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Edwin Cusi","joven":"Fabricio Peralta Cotaquispe","edad":19,"cumple":"2005-12-12","celular":"980000011","telefono":"980000011","zona":"CASA BLANCA - PORTON","estado":"Nuevo","ultimoContacto":"2026-08-08","direccion":"","rol":"","notas":"","esGeneral":false,"creador":"Edwin Cusi","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Edwin Cusi","joven":"Abigail","edad":21,"cumple":"2005-10-22","celular":"980000021","telefono":"980000021","zona":"CENTRAL - SANTA ROSA","estado":"Activo","ultimoContacto":"2026-08-09","direccion":"","rol":"Líder de célula","notas":"","esGeneral":false,"creador":"Admin","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Edwin Cusi","joven":"Andrea","edad":23,"cumple":"2005-08-04","celular":"980000031","telefono":"980000031","zona":"FRAGATAS - CANTO GRANDE","estado":"En seguimiento","ultimoContacto":"2026-08-08","direccion":"","rol":"","notas":"","esGeneral":false,"creador":"Edwin Cusi","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Emily Arlyn","joven":"Greis","edad":20,"cumple":"2005-05-05","celular":"980000004","telefono":"980000004","zona":"FRAGATAS - CANTO GRANDE","estado":"En seguimiento","ultimoContacto":"2026-07-27","direccion":"","rol":"","notas":"","esGeneral":false,"creador":"Emily Arlyn","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Emily Arlyn","joven":"Valentina Laguna Tucto","edad":22,"cumple":"2005-03-15","celular":"980000014","telefono":"980000014","zona":"CASA BLANCA - PORTON","estado":"Nuevo","ultimoContacto":"2026-08-03","direccion":"","rol":"","notas":"","esGeneral":false,"creador":"Emily Arlyn","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Emily Arlyn","joven":"Sebastian Tumpay","edad":16,"cumple":"2005-01-25","celular":"980000024","telefono":"980000024","zona":"CENTRAL - SANTA ROSA","estado":"Activo","ultimoContacto":"2026-07-27","direccion":"","rol":"","notas":"","esGeneral":false,"creador":"Emily Arlyn","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Ester Milagros","joven":"Josue","edad":18,"cumple":"2005-03-03","celular":"980000002","telefono":"980000002","zona":"CASA BLANCA - PORTON","estado":"Nuevo","ultimoContacto":"2026-08-02","direccion":"","rol":"","notas":"","esGeneral":true,"creador":"Ester Milagros","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Ester Milagros","joven":"Elvis Tadeo","edad":20,"cumple":"2005-01-13","celular":"980000012","telefono":"980000012","zona":"CENTRAL - SANTA ROSA","estado":"Activo","ultimoContacto":"2026-08-02","direccion":"","rol":"","notas":"","esGeneral":false,"creador":"Ester Milagros","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Ester Milagros","joven":"Smith Briceño","edad":22,"cumple":"2005-11-23","celular":"980000022","telefono":"980000022","zona":"FRAGATAS - CANTO GRANDE","estado":"En seguimiento","ultimoContacto":"2026-08-02","direccion":"","rol":"","notas":"","esGeneral":false,"creador":"Ester Milagros","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Geancarlo ynquel","joven":"Melany","edad":16,"cumple":"2005-09-09","celular":"980000008","telefono":"980000008","zona":"CASA BLANCA - PORTON","estado":"Nuevo","ultimoContacto":"2026-08-14","direccion":"","rol":"","notas":"","esGeneral":false,"creador":"Geancarlo ynquel","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Geancarlo ynquel","joven":"Berenice","edad":18,"cumple":"2005-07-19","celular":"980000018","telefono":"980000018","zona":"CENTRAL - SANTA ROSA","estado":"Activo","ultimoContacto":"2026-08-01","direccion":"","rol":"","notas":"","esGeneral":false,"creador":"Geancarlo ynquel","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Geancarlo ynquel","joven":"Gustavo Jimenez","edad":20,"cumple":"2005-05-01","celular":"980000028","telefono":"980000028","zona":"FRAGATAS - CANTO GRANDE","estado":"En seguimiento","ultimoContacto":"2026-08-14","direccion":"","rol":"","notas":"","esGeneral":false,"creador":"Geancarlo ynquel","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Gustavo cruz","joven":"Aldair Escalante","edad":17,"cumple":"2005-10-10","celular":"980000009","telefono":"980000009","zona":"CENTRAL - SANTA ROSA","estado":"Activo","ultimoContacto":"2026-08-05","direccion":"","rol":"","notas":"","esGeneral":false,"creador":"Gustavo cruz","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Gustavo cruz","joven":"Greis Mendoza","edad":19,"cumple":"2005-08-20","celular":"980000019","telefono":"980000019","zona":"FRAGATAS - CANTO GRANDE","estado":"En seguimiento","ultimoContacto":"2026-08-04","direccion":"","rol":"","notas":"","esGeneral":false,"creador":"Gustavo cruz","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Gustavo cruz","joven":"Ruth","edad":21,"cumple":"2005-06-02","celular":"980000029","telefono":"980000029","zona":"CASA BLANCA - PORTON","estado":"Nuevo","ultimoContacto":"2026-08-05","direccion":"","rol":"","notas":"","esGeneral":false,"creador":"Gustavo cruz","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Luis Ivan jallo ccoyo","joven":"Heydi","edad":21,"cumple":"2005-06-06","celular":"","telefono":"","zona":"CASA BLANCA - PORTON","estado":"Nuevo","ultimoContacto":"2026-08-11","direccion":"Av. Central 456","rol":"","notas":"Sin celular","esGeneral":false,"creador":"Luis Ivan jallo ccoyo","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Luis Ivan jallo ccoyo","joven":"Valentina Trujillo","edad":23,"cumple":"2005-04-16","celular":"","telefono":"","zona":"CENTRAL - SANTA ROSA","estado":"Activo","ultimoContacto":"2026-07-29","direccion":"","rol":"","notas":"","esGeneral":false,"creador":"Luis Ivan jallo ccoyo","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Luis Ivan jallo ccoyo","joven":"Piero","edad":17,"cumple":"2005-02-26","celular":"","telefono":"","zona":"FRAGATAS - CANTO GRANDE","estado":"En seguimiento","ultimoContacto":"2026-08-11","direccion":"","rol":"","notas":"","esGeneral":false,"creador":"Luis Ivan jallo ccoyo","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Luz Victoria","joven":"Josué Aroni","edad":19,"cumple":"2005-04-04","celular":"980000003","telefono":"980000003","zona":"CENTRAL - SANTA ROSA","estado":"Activo","ultimoContacto":"2026-08-13","direccion":"","rol":"","notas":"","esGeneral":false,"creador":"Luz Victoria","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Luz Victoria","joven":"Abigail Santiago Tucto","edad":21,"cumple":"2005-02-14","celular":"980000013","telefono":"980000013","zona":"FRAGATAS - CANTO GRANDE","estado":"En seguimiento","ultimoContacto":"2026-08-10","direccion":"","rol":"","notas":"","esGeneral":false,"creador":"Luz Victoria","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Luz Victoria","joven":"Gracia Reyes","edad":23,"cumple":"2005-12-24","celular":"980000023","telefono":"980000023","zona":"CASA BLANCA - PORTON","estado":"Nuevo","ultimoContacto":"2026-08-13","direccion":"","rol":"","notas":"","esGeneral":false,"creador":"Luz Victoria","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Maryoiry Leo Rafae Admin","joven":"Aron Gonzales Garcia","edad":16,"cumple":"2005-01-01","celular":"","telefono":"","zona":"CENTRAL - SANTA ROSA","estado":"Activo","ultimoContacto":"2026-08-12","direccion":"","rol":"","notas":"","esGeneral":false,"creador":"Maryoiry Leo Rafae Admin","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Maryoiry Leo Rafae Admin","joven":"Azucena","edad":18,"cumple":"2005-11-11","celular":"","telefono":"","zona":"FRAGATAS - CANTO GRANDE","estado":"En seguimiento","ultimoContacto":"2026-07-31","direccion":"","rol":"","notas":"","esGeneral":false,"creador":"Maryoiry Leo Rafae Admin","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Maryoiry Leo Rafae Admin","joven":"Josias Reyes","edad":20,"cumple":"","telefono":"","celular":"","zona":"CASA BLANCA - PORTON","estado":"Nuevo","ultimoContacto":"2026-08-12","direccion":"","rol":"","notas":"Sin cumple","esGeneral":true,"creador":"Maryoiry Leo Rafae Admin","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Maryoiry Leo Rafae Admin","joven":"Rut Tadeo","edad":22,"cumple":"2005-07-03","celular":"","telefono":"","zona":"CENTRAL - SANTA ROSA","estado":"Activo","ultimoContacto":"2026-07-31","direccion":"","rol":"","notas":"","esGeneral":false,"creador":"Maryoiry Leo Rafae Admin","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Reyna Mejia","joven":"Yasely Cerna","edad":22,"cumple":"2005-07-07","celular":"980000006","telefono":"980000006","zona":"CENTRAL - SANTA ROSA","estado":"Activo","ultimoContacto":"2026-08-06","direccion":"","rol":"","notas":"","esGeneral":false,"creador":"Reyna Mejia","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Reyna Mejia","joven":"Génesis Escalante","edad":16,"cumple":"2005-05-17","celular":"980000016","telefono":"980000016","zona":"FRAGATAS - CANTO GRANDE","estado":"En seguimiento","ultimoContacto":"2026-08-07","direccion":"","rol":"","notas":"","esGeneral":false,"creador":"Reyna Mejia","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Reyna Mejia","joven":"Brianna Escalante","edad":18,"cumple":"2005-03-27","celular":"980000026","telefono":"980000026","zona":"CASA BLANCA - PORTON","estado":"Nuevo","ultimoContacto":"2026-08-06","direccion":"","rol":"","notas":"","esGeneral":false,"creador":"Reyna Mejia","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Roy briceño","joven":"Flor","edad":23,"cumple":"2005-08-08","celular":"980000007","telefono":"980000007","zona":"FRAGATAS - CANTO GRANDE","estado":"En seguimiento","ultimoContacto":"2026-07-23","direccion":"","rol":"","notas":"","esGeneral":false,"creador":"Roy briceño","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Roy briceño","joven":"Maria","edad":17,"cumple":"2005-06-18","celular":"980000017","telefono":"980000017","zona":"CASA BLANCA - PORTON","estado":"Nuevo","ultimoContacto":"2026-07-20","direccion":"","rol":"","notas":"","esGeneral":false,"creador":"Roy briceño","foto":"","historial":[],"cumpleMensajePersonal":""},
+{"lider":"Roy briceño","joven":"Javiera Sofia Chipana","edad":19,"cumple":"2005-04-28","celular":"980000027","telefono":"980000027","zona":"CENTRAL - SANTA ROSA","estado":"Activo","ultimoContacto":"2026-07-23","direccion":"","rol":"","notas":"","esGeneral":false,"creador":"Roy briceño","foto":"","historial":[],"cumpleMensajePersonal":""}
+].map((j,i)=>({...j, id:'j'+i, historial: j.historial||[]}));
+let LIDERES = [
+{id:'l1', nombre:'Luis Ivan jallo ccoyo', cargo:'LIDER PRINCIPAL', genero:'Varón', celular:'', zona:'CENTRAL - SANTA ROSA', activo:true, password:'1234', cumple:'1990-03-15', direccion:'Av. Central 123', rol:'Pastor Jovenes', foto:'', cumpleMensajePersonal:''},
+{id:'l2', nombre:'Reyna Mejia', cargo:'LIDER PRINCIPAL', genero:'Dama', celular:'980000006', zona:'FRAGATAS - CANTO GRANDE', activo:true, password:'1234', cumple:'1988-07-22', direccion:'Jr. Fragatas 456', rol:'Pastora', foto:'', cumpleMensajePersonal:''},
+{id:'l3', nombre:'Maryoiry Leo Rafae Admin', cargo:'LIDER', genero:'Dama', celular:'', zona:'CASA BLANCA - PORTON', activo:true, password:'1234', cumple:'1995-11-10', direccion:'', rol:'Admin', foto:'', cumpleMensajePersonal:''},
+{id:'l4', nombre:'Edwin Cusi', cargo:'LIDER', genero:'Varón', celular:'980000001', zona:'FRAGATAS - CANTO GRANDE', activo:true, password:'1234', cumple:'1992-05-08', direccion:'', rol:'Líder de zona', foto:'', cumpleMensajePersonal:''},
+{id:'l5', nombre:'Ester Milagros', cargo:'LIDER', genero:'Dama', celular:'980000002', zona:'CASA BLANCA - PORTON', activo:true, password:'1234', cumple:'1994-09-18', direccion:'', rol:'', foto:'', cumpleMensajePersonal:''},
+{id:'l6', nombre:'Luz Victoria', cargo:'LIDER', genero:'Dama', celular:'980000003', zona:'CENTRAL - SANTA ROSA', activo:true, password:'1234', cumple:'1993-12-03', direccion:'', rol:'', foto:'', cumpleMensajePersonal:''},
+{id:'l7', nombre:'Emily Arlyn', cargo:'LIDER', genero:'Dama', celular:'980000004', zona:'FRAGATAS - CANTO GRANDE', activo:true, password:'1234', cumple:'1998-02-28', direccion:'', rol:'', foto:'', cumpleMensajePersonal:''},
+{id:'l8', nombre:'Roy briceño', cargo:'LIDER', genero:'Varón', celular:'980000007', zona:'CASA BLANCA - PORTON', activo:true, password:'1234', cumple:'1991-06-14', direccion:'', rol:'', foto:'', cumpleMensajePersonal:''},
+{id:'l9', nombre:'Geancarlo ynquel', cargo:'LIDER', genero:'Varón', celular:'980000008', zona:'CENTRAL - SANTA ROSA', activo:true, password:'1234', cumple:'1996-08-25', direccion:'', rol:'', foto:'', cumpleMensajePersonal:''},
+{id:'l10', nombre:'Gustavo cruz', cargo:'LIDER', genero:'Varón', celular:'980000009', zona:'FRAGATAS - CANTO GRANDE', activo:true, password:'1234', cumple:'1990-10-12', direccion:'', rol:'Director Alabanza', foto:'', cumpleMensajePersonal:''},
+];
+let ZONAS = ['FRAGATAS - CANTO GRANDE','CASA BLANCA - PORTON','CENTRAL - SANTA ROSA'];
+let CARGOS_PROGRAMA = [{key:'direccionV', label:'Dirección Varón', icon:'🎤'},{key:'direccionD', label:'Dirección Dama', icon:'🎙️'},{key:'lectura', label:'Lectura', icon:'📖'},{key:'oracion', label:'Oración', icon:'🙏'},{key:'alabanza', label:'Alabanza', icon:'🎶'},{key:'mensaje', label:'Mensaje', icon:'📢'},{key:'ofrendas', label:'Ofrendas', icon:'💝'}];
+let PROGRAMA = {direccionV:'Gustavo cruz', direccionD:'Ester Milagros', lectura:'Emily Arlyn', oracion:'Geancarlo ynquel', alabanza:'Maryoiry Leo Rafae Admin', mensaje:'Edwin Cusi', ofrendas:'Maryoiry Leo Rafae Admin', fecha:new Date().toISOString().slice(0,10)};
+let currentTab='dashboard', currentUser=null, currentRole=null;
+let fSearch='', fEstado='', fZona='', globalSearchValue='';
+let editingLiderId=null, editingJovenId=null;
+let jovenesPage=1, jovenesPerPage=10;
+let activeSavedFilter=null;
+let cumpleMesFiltro = new Date().getMonth();
+
+// ROLES LOGIC
+function isAdmin(){ return currentRole==='admin'; }
+function isLider(){ return currentRole==='lider'; }
+function canManageLideres(){ return isAdmin(); }
+function canManageZonas(){ return isAdmin(); }
+function canManageProgramaFull(){ return isAdmin(); }
+function canReasignar(){ return isAdmin(); }
+function canEditJoven(j){ if(isAdmin()) return true; return j.lider===currentUser || j.creador===currentUser; }
+function canViewJoven(j){ if(isAdmin()) return true; return j.lider===currentUser || j.esGeneral; }
+function canDeleteJoven(j){ if(isAdmin()) return true; return j.lider===currentUser && !j.esGeneral; }
+
+const versiculosRVR = [
+  {texto: 'Porque yo sé los pensamientos que tengo acerca de vosotros, dice Jehová, pensamientos de paz, y no de mal, para daros el fin que esperáis.', cita: 'Jeremías 29:11'},
+  {texto: 'Todo lo puedo en Cristo que me fortalece.', cita: 'Filipenses 4:13'},
+  {texto: 'Mira que te mando que te esfuerces y seas valiente; no temas ni desmayes, porque Jehová tu Dios estará contigo en dondequiera que vayas.', cita: 'Josué 1:9'},
+  {texto: 'Jehová es mi pastor; nada me faltará.', cita: 'Salmos 23:1'},
+  {texto: 'Fíate de Jehová de todo tu corazón, y no te apoyes en tu propia prudencia.', cita: 'Proverbios 3:5'},
+  {texto: 'El Señor te bendiga y te guarde; el Señor haga resplandecer su rostro sobre ti.', cita: 'Números 6:24-25'},
+  {texto: 'Mas los que esperan a Jehová tendrán nuevas fuerzas; levantarán alas como las águilas.', cita: 'Isaías 40:31'},
+  {texto: 'Estad quietos, y conoced que yo soy Dios.', cita: 'Salmos 46:10'},
+  {texto: 'No temas, porque yo estoy contigo; no desmayes, porque yo soy tu Dios que te esfuerzo.', cita: 'Isaías 41:10'},
+  {texto: 'La paz os dejo, mi paz os doy; yo no os la doy como el mundo la da.', cita: 'Juan 14:27'},
+  {texto: 'Deléitate asimismo en Jehová, y él te concederá las peticiones de tu corazón.', cita: 'Salmos 37:4'},
+  {texto: 'Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito.', cita: 'Juan 3:16'}
+];
+const mensajesVariados = [
+  (n)=>`Hola ${n}! En tu cumpleaños doy gracias a Dios por tu vida y tu corazón servicial en Conexzion. Que este año veas su bondad en cada paso.\n\n📖 "${versiculosRVR[0].texto}" - ${versiculosRVR[0].cita} (RVR1960)\n\n¡Feliz cumpleaños! 🎂`,
+  (n)=>`¡Feliz cumpleaños ${n}! Tu vida inspira a muchos jóvenes. Oro para que Dios te fortalezca en todo lo que emprendas.\n\n📖 "${versiculosRVR[1].texto}" - ${versiculosRVR[1].cita} (RVR1960) 🙏✨`,
+  (n)=>`${n}, hoy celebramos el regalo de tu vida. Sé valiente, Dios tiene grandes planes para ti.\n\n📖 "${versiculosRVR[2].texto}" - ${versiculosRVR[2].cita} (RVR1960)`,
+  (n)=>`¡Feliz día ${n}! Que nunca te falte la guía y provisión del Señor.\n\n📖 "${versiculosRVR[3].texto}" - ${versiculosRVR[3].cita} (RVR1960) 🎉`,
+  (n)=>`Hola ${n}, en este día especial recuerda que Dios guía tus pasos cuando confías en Él.\n\n📖 "${versiculosRVR[4].texto}" - ${versiculosRVR[4].cita} (RVR1960)`,
+  (n)=>`${n}, que el Señor te bendiga abundantemente hoy y siempre.\n\n📖 "${versiculosRVR[5].texto}" - ${versiculosRVR[5].cita} (RVR1960) 🎂`,
+  (n)=>`Feliz cumpleaños ${n}! Cuando sientas cansancio, recuerda que Dios renueva tus fuerzas.\n\n📖 "${versiculosRVR[6].texto}" - ${versiculosRVR[6].cita} (RVR1960) ✨`,
+  (n)=>`${n}, en tu cumpleaños haz pausa y reconoce que Dios sigue siendo Dios en tu historia.\n\n📖 "${versiculosRVR[7].texto}" - ${versiculosRVR[7].cita} (RVR1960) 🙌`,
+  (n)=>`¡${n}! No temas al futuro, Dios va contigo. Que este nuevo año lo vivas tomado de su mano.\n\n📖 "${versiculosRVR[8].texto}" - ${versiculosRVR[8].cita} (RVR1960) 🎈`,
+  (n)=>`Hola ${n}, que la paz de Cristo que sobrepasa todo entendimiento guarde tu corazón hoy.\n\n📖 "${versiculosRVR[9].texto}" - ${versiculosRVR[9].cita} (RVR1960)`,
+  (n)=>`${n}, deléitate en el Señor este día y confía que Él cumplirá los anhelos que ha puesto en ti.\n\n📖 "${versiculosRVR[10].texto}" - ${versiculosRVR[10].cita} (RVR1960)`,
+  (n)=>`${n}, hoy damos gracias por tu vida, regalo del amor de Dios.\n\n📖 "${versiculosRVR[11].texto}" - ${versiculosRVR[11].cita} (RVR1960) 🎂`
+];
+function cfVariado(nombre, seed){ const first=(nombre||'Amigo').trim().split(' ')[0]; let hash=0; const str=(nombre+seed).toLowerCase(); for(let i=0;i<str.length;i++){ hash = str.charCodeAt(i)+((hash<<5)-hash); } const idx = Math.abs(hash) % mensajesVariados.length; return mensajesVariados[idx](first); }
+function diasDesde(f){ if(!f) return 99; const d=new Date(f); return isNaN(d.getTime())?99:Math.floor((new Date()-d)/86400000); }
+function semaforo(d){ if(d<7) return {c:'bg-emerald-50 text-emerald-700 border-emerald-200', dot:'bg-emerald-500', label:'Al día'}; if(d<=14) return {c:'bg-amber-50 text-amber-700 border-amber-200', dot:'bg-amber-500', label:'Atención'}; return {c:'bg-red-50 text-red-700 border-red-200', dot:'bg-red-500', label:'Crítico'}; }
+function fmtCumple(c){ if(!c) return '—'; if(c.includes('-')){ const p=c.split('-'); const meses=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']; return p[2]+' '+ (meses[parseInt(p[1],10)-1]||''); } return c; }
+function yi(c){ if(!c) return false; try{ let m=0,d=0; if(c.includes('-')){ const p=c.split('-'); m=parseInt(p[1],10); d=parseInt(p[2],10);} const hoy=new Date(); return m===hoy.getMonth()+1 && d===hoy.getDate(); }catch(e){return false;} }
+function parseMonth(c){ if(!c) return -1; if(c.includes('-')) return parseInt(c.split('-')[1],10)-1; return -1; }
+function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.remove('hidden'); setTimeout(()=>t.classList.add('hidden'),3000); }
+
+function saveToLocal(){ try{ localStorage.setItem('conexzion_jovenes', JSON.stringify(RAW_JOVENES)); localStorage.setItem('conexzion_lideres', JSON.stringify(LIDERES)); localStorage.setItem('conexzion_zonas', JSON.stringify(ZONAS)); localStorage.setItem('conexzion_programa', JSON.stringify(PROGRAMA)); }catch(e){} }
+function loadFromLocal(){ try{ const j=localStorage.getItem('conexzion_jovenes'); if(j) RAW_JOVENES=JSON.parse(j); const l=localStorage.getItem('conexzion_lideres'); if(l) LIDERES=JSON.parse(l); const z=localStorage.getItem('conexzion_zonas'); if(z) ZONAS=JSON.parse(z); const p=localStorage.getItem('conexzion_programa'); if(p) PROGRAMA={...PROGRAMA, ...JSON.parse(p)}; }catch(e){} }
+loadFromLocal();
+
+function doLogin(){
+  const user=document.getElementById('userSelect').value;
+  const pass=document.getElementById('passInput').value.trim();
+  const err=document.getElementById('loginError');
+  if(!user){ err.textContent='Selecciona tu nombre'; err.classList.remove('hidden'); return; }
+  if(!pass){ err.textContent='Ingresa contraseña'; err.classList.remove('hidden'); return; }
+  const lid = LIDERES.find(l=> l.nombre===user);
+  if(user==='admin' && pass==='admin123'){ currentUser='Admin'; currentRole='admin'; }
+  else if(lid && lid.password===pass && lid.activo){ currentUser=user; currentRole='lider'; }
+  else { err.textContent='Contraseña incorrecta (líderes: 1234 / admin: admin123)'; err.classList.remove('hidden'); return; }
+  err.classList.add('hidden');
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('appScreen').classList.remove('hidden');
+  const badge=document.getElementById('userBadge');
+  badge.textContent=currentUser + (isAdmin()?' • ADMIN':' • LÍDER');
+  badge.className = 'ml-1 text-[10px] px-2.5 py-1 rounded-full border font-bold ' + (isAdmin()?'role-badge-admin':'role-badge-lider');
+  renderTabs(); renderSavedFilters(); renderTab('dashboard');
+  checkCumpleHoyModal(); checkReasignacionMensual();
+}
+function logout(){ document.getElementById('appScreen').classList.add('hidden'); document.getElementById('loginScreen').classList.remove('hidden'); document.getElementById('userSelect').value=''; document.getElementById('passInput').value=''; }
+
+document.getElementById('loginBtn').addEventListener('click', doLogin);
+document.getElementById('passInput').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+document.getElementById('userSelect').addEventListener('change', ()=>{ document.getElementById('loginError').classList.add('hidden'); });
+
+function renderTabs(){
+  let order=[];
+  if(isAdmin()){
+    order=[{id:'dashboard',label:'Dashboard', icon:'📊'},{id:'lideres',label:'Líderes', icon:'👥'},{id:'jovenes',label:'Jóvenes (todos)', icon:'🌟'},{id:'zonas',label:'Zonas', icon:'📍'},{id:'programa',label:'Programa', icon:'📅'},{id:'cumples',label:'Cumpleaños', icon:'🎂'},{id:'reasignacion',label:'Reasignación mensual', icon:'♻️'}];
+  } else {
+    order=[{id:'dashboard',label:'Mi Dashboard', icon:'📊'},{id:'misjovenes',label:'Mis Jóvenes', icon:'👥'},{id:'agregar',label:'+ Agregar joven', icon:'➕'},{id:'cumples',label:'Cumpleaños', icon:'🎂'},{id:'programa',label:'Programa', icon:'📅'},{id:'miperfil',label:'Mi perfil', icon:'👤'}];
+  }
+  document.getElementById('tabs').innerHTML=order.map(t=>`<button onclick="renderTab('${t.id}')" data-tab="${t.id}" class="tab-btn px-3 sm:px-4 py-2 rounded-full text-[11px] sm:text-xs font-bold border whitespace-nowrap flex items-center gap-1.5 ${currentTab===t.id?'tab-active':'tab-inactive'}"><span>${t.icon}</span> ${t.label}</button>`).join('');
+}
+
+function renderSavedFilters(){
+  if(isLider()){
+    document.getElementById('savedFilters').innerHTML = `<span class="text-[10px] text-[#94A3B8]">Rol Líder: solo ves tus jóvenes a cargo + puedes agregar nuevos a la lista general</span>`;
+    return;
+  }
+  const filters=[{id:'all', label:'Todos', icon:'📋'},{id:'criticos', label:'Críticos >14d', icon:'🔴'},{id:'activos', label:'Activos', icon:'🟢'},{id:'nuevos', label:'Nuevos', icon:'🆕'},{id:'hoy', label:'Hoy cumple 🎂', icon:'🎂'}];
+  document.getElementById('savedFilters').innerHTML = filters.map(f=>`<button onclick="applySavedFilter('${f.id}')" class="px-3 py-1.5 rounded-full text-[11px] font-bold border whitespace-nowrap ${activeSavedFilter===f.id?'bg-[#0F172A] text-white border-[#0F172A]':'bg-white text-[#64748B] border-[#E2E8F0]'}">${f.icon} ${f.label}</button>`).join('') + `<span class="ml-2 text-[10px] text-[#94A3B8]">Admin: filtros globales • Reasignación mensual</span>`;
+}
+
+function applySavedFilter(id){ activeSavedFilter=id; fEstado=''; fZona=''; fSearch=''; globalSearchValue=''; document.getElementById('globalSearch').value=''; renderSavedFilters(); renderTab(currentTab==='misjovenes'?'misjovenes':'jovenes'); }
+
+function onGlobalSearch(val){ globalSearchValue=val.toLowerCase().trim(); renderTab(currentTab); }
+function clearGlobalSearch(){ globalSearchValue=''; document.getElementById('globalSearch').value=''; renderTab(currentTab); }
+
+function getFilteredJovenes(forUser){
+  let enriched = forUser.map(j=>({...j, dias:diasDesde(j.ultimoContacto), sem:semaforo(diasDesde(j.ultimoContacto)), esHoy: yi(j.cumple)}));
+  if(globalSearchValue){ enriched = enriched.filter(j=> j.joven.toLowerCase().includes(globalSearchValue) || (j.lider||'').toLowerCase().includes(globalSearchValue) || (j.zona||'').toLowerCase().includes(globalSearchValue)); }
+  if(fSearch) enriched = enriched.filter(j=> j.joven.toLowerCase().includes(fSearch.toLowerCase()));
+  if(fEstado) enriched = enriched.filter(j=> j.estado===fEstado);
+  if(fZona) enriched = enriched.filter(j=> j.zona===fZona);
+  if(activeSavedFilter==='criticos') enriched = enriched.filter(j=> j.dias>14);
+  if(activeSavedFilter==='activos') enriched = enriched.filter(j=> j.estado==='Activo');
+  if(activeSavedFilter==='nuevos') enriched = enriched.filter(j=> j.estado==='Nuevo');
+  if(activeSavedFilter==='hoy') enriched = enriched.filter(j=> j.esHoy);
+  return enriched;
+}
+
+function checkReasignacionMensual(){
+  if(!isAdmin()) return;
+  const last = localStorage.getItem('conexzion_last_reasign');
+  if(!last) return;
+  const diff = Math.floor((new Date() - new Date(last))/86400000);
+  if(diff>=30){
+    setTimeout(()=>{ if(confirm(`Han pasado ${diff} días desde la última reasignación (${last}). ¿Reasignar ahora?`)) openReasignModal(); }, 1500);
+  }
+}
+
+function renderTab(tab){
+  // Role guard
+  if(isLider() && ['lideres','jovenes','zonas','reasignacion'].includes(tab)){ tab='misjovenes'; }
+  if(isAdmin() && ['misjovenes','agregar','miperfil'].includes(tab)){ tab='dashboard'; }
+  currentTab=tab;
+  document.querySelectorAll('.tab-btn').forEach(b=>{ b.className = b.dataset.tab===tab ? 'tab-btn px-3 sm:px-4 py-2 rounded-full text-[11px] sm:text-xs font-bold border whitespace-nowrap flex items-center gap-1.5 tab-active' : 'tab-btn px-3 sm:px-4 py-2 rounded-full text-[11px] sm:text-xs font-bold border whitespace-nowrap flex items-center gap-1.5 tab-inactive'; });
+  const main=document.getElementById('mainContent');
+  let forUserAdmin = RAW_JOVENES;
+  let forUserLider = RAW_JOVENES.filter(j=> j.lider===currentUser || j.esGeneral);
+  let forUser = isAdmin() ? forUserAdmin : forUserLider;
+
+  if(tab==='dashboard'){
+    const activos = forUser.filter(j=>j.estado==='Activo').length;
+    const seguimiento = forUser.filter(j=>j.estado==='En seguimiento').length;
+    const criticos = forUser.map(j=>({...j, dias:diasDesde(j.ultimoContacto)})).filter(j=>j.dias>14).length;
+    const hoyJ = forUser.filter(j=> yi(j.cumple));
+    const hoyL = LIDERES.filter(l=> yi(l.cumple));
+    const lastReasign = localStorage.getItem('conexzion_last_reasign') || 'Nunca';
+    const totalJovenes = RAW_JOVENES.length;
+    main.innerHTML=`<div class="space-y-4">
+      <div class="card p-5 sm:p-6"><div class="flex flex-col sm:flex-row justify-between items-start gap-3"><div><h2 class="h-title !text-[20px]">¡Hola, ${currentUser.split(' ')[0]}! ${isAdmin()?'👑':'🙋‍♂️'}</h2><div class="mt-2 flex gap-2"><span class="badge ${isAdmin()?'role-badge-admin':'role-badge-lider'}">${isAdmin()?'ROL: ADMIN (acceso total)':'ROL: LÍDER (acceso limitado)'}</span>${isAdmin()?`<span class="badge bg-white border-[#E2E8F0] text-[#64748B]">Reasignación mensual: cada 30 días</span>`:''}</div></div><div class="flex gap-2">${isAdmin()?`<button onclick="openReasignModal()" class="px-4 py-2 btn-primary text-[11px]">♻️ Reasignación mensual</button>`: `<button onclick="renderTab('agregar')" class="px-4 py-2 btn-primary text-[11px]">➕ Agregar joven</button>`}<span class="px-3 py-2 rounded-full bg-[#F1F5F9] border border-[#E2E8F0] text-[#0F172A] text-[11px] font-bold">${isAdmin()?'Slate Light • Roles':'Slate Light • Líder'}</span></div></div>
+        <div class="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="card12 p-4 text-center"><div class="w-8 h-8 mx-auto rounded-[8px] bg-[#0F172A] text-white grid place-items-center text-sm mb-2">✓</div><div class="text-[22px] font-black">${activos}</div><div class="h-subtitle !text-[10px]">${isAdmin()?'Activos total':'Mis activos'}</div></div>
+          <div class="card12 p-4 text-center"><div class="w-8 h-8 mx-auto rounded-[8px] bg-[#F59E0B] text-white grid place-items-center text-sm mb-2">◐</div><div class="text-[22px] font-black text-[#D97706]">${seguimiento}</div><div class="h-subtitle !text-[10px]">Seguimiento</div></div>
+          <div class="card12 p-4 text-center"><div class="w-8 h-8 mx-auto rounded-[8px] bg-[#EF4444] text-white grid place-items-center text-sm mb-2">!</div><div class="text-[22px] font-black text-[#DC2626]">${criticos}</div><div class="h-subtitle !text-[10px]">Críticos >14d</div></div>
+          <div class="card12 p-4 text-center"><div class="w-8 h-8 mx-auto rounded-[8px] bg-[#0F172A] text-white grid place-items-center text-sm mb-2">🎂</div><div class="text-[22px] font-black">${hoyJ.length+hoyL.length}</div><div class="h-subtitle !text-[10px]">Hoy cumple</div></div>
+        </div>
+        ${isLider()?`<div class="mt-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-[12px] p-4"><div class="h-title !text-[13px]">¿Qué puedes hacer como líder?</div><div class="mt-2 grid sm:grid-cols-2 gap-2 text-[12px] text-[#475569]"><div>✅ Ver solo tus jóvenes a cargo (${forUser.filter(j=>!j.esGeneral).length})</div><div>✅ Agregar nuevos jóvenes a la lista general</div><div>✅ Editar tus jóvenes (contacto, estado, notas)</div><div>✅ Ver cumpleaños de tus jóvenes</div><div>✅ Ver programa semanal (solo lectura)</div><div>✅ WhatsApp directo a tus jóvenes</div><div>❌ No puedes reasignar (solo Admin mensual)</div><div>❌ No puedes ver jóvenes de otros líderes</div></div></div>`:''}
+      </div>
+      ${hoyJ.length+hoyL.length>0?`<div class="card p-4"><h4 class="h-title !text-[13px]">🔥 Hoy celebramos! <span class="ml-2 px-2 py-0.5 rounded-full bg-[#0F172A] text-white text-[10px]">${hoyJ.length+hoyL.length}</span></h4><div class="mt-3 grid gap-2">${[...hoyJ.map(j=>({...j, nombre:j.joven, tipo:'joven'})), ...hoyL.map(l=>({...l, tipo:'lider'}))].map(p=>`<div class="flex justify-between items-center gap-2 border border-[#E2E8F0] rounded-[12px] p-3 bg-white"><span class="text-[13px]"><b>${p.nombre}</b> • ${p.tipo==='joven'?p.lider:p.cargo}</span><button onclick="sendCumple('${p.id||p.nombre}','${p.tipo}')" class="btn-whatsapp text-[11px]">🎁 Enviar</button></div>`).join('')}</div></div>`:''}
+      ${isAdmin()?`<div class="card p-4"><h4 class="h-title !text-[13px]">📊 Distribución actual por líder (Admin)</h4><div class="mt-3 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">${LIDERES.filter(l=>l.activo).map(l=>{ const count=RAW_JOVENES.filter(j=>j.lider===l.nombre && !j.esGeneral).length; return `<div class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-[10px] p-2.5 text-center"><div class="font-bold text-[12px] truncate">${l.nombre.split(' ')[0]}</div><div class="text-[18px] font-black">${count}</div><div class="text-[10px] text-[#94A3B8]">jóvenes</div></div>`}).join('')}</div></div>`:''}
+    </div>`;
+  
+  } else if(tab==='lideres'){
+    // Solo admin - restaurar diseño anterior: lista estilo jóvenes + tarjetas con jóvenes + asignación inteligente
+    main.innerHTML=`<div class="space-y-4">
+      <div class="card p-4 sm:p-5"><div class="flex flex-col sm:flex-row gap-3 justify-between items-start sm:items-center"><div><h2 class="h-title">Líderes <span class="ml-2 px-2 py-0.5 rounded-full bg-[#0F172A] text-white text-[10px]">${LIDERES.length}</span></h2></div><button onclick="openModalLider()" class="px-5 py-2.5 btn-primary w-full sm:w-auto">+ Nuevo líder</button></div>
+        <div class="mt-5 space-y-2.5">
+          ${LIDERES.map(l=>{
+            const count = RAW_JOVENES.filter(j=>j.lider===l.nombre).length;
+            const fotoHtml = l.foto ? `<img src="${l.foto}">` : l.nombre.charAt(0);
+            return `<div class="card12 p-4 flex flex-col sm:flex-row gap-4"><div class="avatar hidden sm:grid">${fotoHtml}</div><div class="flex-1 min-w-0"><div class="flex flex-wrap gap-2 items-center"><span class="font-bold text-[14px]">${l.nombre}</span><span class="badge ${l.cargo==='LIDER PRINCIPAL'?'bg-[#0F172A] text-white border-[#0F172A]':'bg-white text-[#0F172A] border-[#E2E8F0]'}">${l.cargo}</span><span class="badge bg-white text-[#64748B] border-[#E2E8F0]">${l.genero}</span>${!l.activo?'<span class="badge bg-red-50 text-red-600 border-red-200">Inactivo</span>':''}</div><div class="mt-2 text-[12px] grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-[#475569]"><div>📱 ${l.celular||'—'} • 🎂 ${fmtCumple(l.cumple)} • 📍 ${l.direccion||'—'}</div><div>👥 <b>${count} jóvenes</b> • 📍 ${l.zona||'Sin zona'} • 👤 ${l.rol||'—'}</div></div></div><div class="flex gap-2 shrink-0"><button onclick="openModalLider('${l.id}')" class="btn-edit">✎ Editar</button><button onclick="toggleActivoLider('${l.id}')" class="btn-desact">${l.activo?'Desactivar':'Activar'}</button></div></div>`;
+          }).join('')}
+        </div>
+      </div>
+      <div class="card p-4 sm:p-5"><h3 class="h-title !text-[13px]">📋 Jóvenes por líder (tarjetas con lista)</h3><div class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          ${LIDERES.map(l=>{
+            const jovenesLider = RAW_JOVENES.filter(j=>j.lider===l.nombre);
+            const fotoHtml = l.foto ? `<img src="${l.foto}">` : l.nombre.charAt(0);
+            return `<div class="bg-white rounded-[12px] border border-[#E2E8F0] p-4 space-y-3"><div class="flex justify-between items-start"><div class="flex gap-2.5"><div class="avatar !w-9 !h-9 !text-[13px]">${fotoHtml}</div><div class="min-w-0"><div class="font-bold text-[13px] truncate max-w-[140px]">${l.nombre}</div><span class="badge mt-1 inline-block ${l.cargo==='LIDER PRINCIPAL'?'bg-[#0F172A] text-white border-[#0F172A]':'bg-[#F1F5F9] text-[#0F172A] border-[#E2E8F0]'}">${l.cargo}</span></div></div><button onclick="openModalLider('${l.id}')" class="w-7 h-7 rounded-full border border-[#E2E8F0] bg-white grid place-items-center text-[11px]">✎</button></div><div class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-[10px] p-2.5 text-[11px] text-[#64748B]"><div>📱 ${l.celular||'—'} • 🎂 ${fmtCumple(l.cumple)}</div><div>👥 ${jovenesLider.length} jóvenes • 📍 ${l.zona||'Sin zona'}</div></div><div class="bg-white border border-[#E2E8F0] rounded-[10px] p-2.5"><div class="text-[10px] uppercase font-bold tracking-wider text-[#0F172A] mb-2">👥 JÓVENES (${jovenesLider.length})</div><div class="space-y-1.5 max-h-[160px] overflow-auto pr-1">${jovenesLider.length ? jovenesLider.map(j=>{ const jf=j.foto?`<img src="${j.foto}">`:j.joven.charAt(0); return `<div class="flex items-center gap-2 bg-[#F8FAFC] border border-[#E2E8F0] rounded-[8px] px-2 py-1.5 text-[11px]"><div class="w-6 h-6 rounded-[6px] bg-[#0F172A] text-white grid place-items-center font-bold text-[10px] shrink-0 overflow-hidden">${jf}</div><span class="font-medium truncate flex-1">${j.joven}</span><span class="badge !text-[9px] !px-1.5 ${j.estado==='Activo'?'bg-[#0F172A] text-white border-[#0F172A]':j.estado==='Nuevo'?'bg-emerald-50 text-emerald-700 border-emerald-200':'bg-amber-50 text-amber-700 border-amber-200'}">${j.estado}</span></div>`}).join('') : `<div class="text-[11px] text-[#94A3B8] text-center py-3">Sin jóvenes asignados</div>`}</div></div></div>`;
+          }).join('')}
+        </div>
+      </div>
+      <div class="card p-5"><div class="flex items-start gap-3"><div class="w-9 h-9 rounded-[10px] bg-[#0F172A] text-white grid place-items-center shrink-0">♻️</div><div class="flex-1"><h3 class="h-title !text-[13px]">Asignación inteligente</h3><p class="text-[11px] text-[#64748B] mt-1">Reorganiza jóvenes equilibradamente • Mantiene generales intactos • Botón FIXED sin confirm bloqueado</p><div class="mt-3 grid grid-cols-3 gap-2 text-[10px]"><div class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-[10px] p-2.5 text-center"><div class="font-black text-[#0F172A] text-sm">${LIDERES.filter(l=>l.activo).length}</div><div class="text-[#94A3B8]">Activos</div></div><div class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-[10px] p-2.5 text-center"><div class="font-black text-[#0F172A] text-sm">${RAW_JOVENES.filter(j=>!j.esGeneral).length}</div><div class="text-[#94A3B8]">Asignables</div></div><div class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-[10px] p-2.5 text-center"><div class="font-black text-[#94A3B8] text-sm">${RAW_JOVENES.filter(j=>j.esGeneral).length}</div><div class="text-[#94A3B8]">Generales</div></div></div><button onclick="randomAsignacion()" class="mt-4 w-full py-3 btn-primary">🔀 Reasignar aleatoriamente (FIXED)</button></div></div></div>
+    </div>`;
+
+  } else if(tab==='misjovenes'){
+    // Lider: solo sus jovenes
+    let enriched = getFilteredJovenes(forUser);
+    const total = enriched.length;
+    const paginated = enriched.slice(0, jovenesPage*jovenesPerPage);
+    const hasMore = total > paginated.length;
+    main.innerHTML=`<div class="space-y-4">
+      <div class="card p-4 sm:p-5"><div class="flex flex-col sm:flex-row gap-3 justify-between"><div><h2 class="h-title">Mis Jóvenes <span class="ml-2 px-2 py-0.5 rounded-full bg-[#0F172A] text-white text-[10px]">${total} a tu cargo</span></h2></div><div class="flex gap-2 w-full sm:w-auto"><button onclick="openMassWA()" class="flex-1 sm:flex-none px-4 py-2.5 btn-secondary">📱 Masivo a mis jóvenes</button><button onclick="renderTab('agregar')" class="flex-1 sm:flex-none px-5 py-2.5 btn-primary">+ Agregar joven</button></div></div>
+        <div class="mt-4 flex flex-col sm:flex-row gap-2"><input value="${fSearch}" oninput="fSearch=this.value; jovenesPage=1; renderTab('misjovenes')" placeholder="Buscar en mis jóvenes..." class="flex-1 px-4 py-2.5"/><select onchange="fEstado=this.value; jovenesPage=1; renderTab('misjovenes')" class="px-3 py-2.5 border border-[#E2E8F0] rounded-[10px] text-xs bg-white"><option value="">Estados</option><option ${fEstado==='Activo'?'selected':''}>Activo</option><option ${fEstado==='Nuevo'?'selected':''}>Nuevo</option><option ${fEstado==='En seguimiento'?'selected':''}>En seguimiento</option></select></div>
+      </div>
+      <div class="space-y-2.5">
+        ${paginated.map(j=>{
+          const fotoHtml = j.foto ? `<img src="${j.foto}">` : j.joven.charAt(0);
+          return `<div class="card12 p-4 flex flex-col sm:flex-row gap-4"><div class="avatar hidden sm:grid">${fotoHtml}</div><div class="flex-1 min-w-0"><div class="flex flex-wrap gap-2 items-center"><span class="font-bold text-[14px]">${j.joven}</span><span class="badge ${j.estado==='Activo'?'bg-[#0F172A] text-white border-[#0F172A]':j.estado==='Nuevo'?'bg-emerald-50 text-emerald-700 border-emerald-200':'bg-amber-50 text-amber-700 border-amber-200'}">${j.estado}</span>${j.esHoy?'<span class="badge bg-[#0F172A] text-white">🎂 HOY</span>':''}<span class="badge bg-white text-[#64748B] border-[#E2E8F0]">${j.dias}d ${j.sem.label}</span>${j.esGeneral?'<span class="badge bg-blue-50 text-blue-700 border-blue-200">General</span>':''}</div><div class="mt-2 text-[12px] grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-[#475569]"><div>📍 ${j.zona} • 🎂 ${fmtCumple(j.cumple)}</div><div>📱 ${j.celular||'—'} • 🕒 ${j.ultimoContacto}</div></div></div><div class="flex gap-2 shrink-0"><button onclick="openModalJoven('${j.id}')" class="btn-edit">✎ Editar</button><button onclick="sendCumple('${j.id}','joven')" class="btn-whatsapp">WhatsApp</button></div></div>`;
+        }).join('')}
+      </div>
+      ${hasMore?`<button onclick="jovenesPage++; renderTab('misjovenes')" class="w-full py-3 card text-[13px] font-bold">Cargar más 10 • Quedan ${total-paginated.length}</button>`:`<div class="text-center text-[11px] text-[#94A3B8] py-3">Mostrando ${paginated.length} de ${total} jóvenes a tu cargo</div>`}
+    </div>`;
+  } else if(tab==='agregar'){
+    // Formulario simple para líder agregar joven a lista general
+    main.innerHTML=`<div class="space-y-4 max-w-2xl mx-auto">
+      <div class="card p-5 sm:p-6"><h2 class="h-title">➕ Agregar nuevo joven a la lista general</h2>
+        <div class="mt-5 grid gap-3">
+          <input id="add-nombre" placeholder="Nombre completo *" class="px-4 py-3"/>
+          <div class="grid grid-cols-2 gap-2"><input id="add-edad" type="number" placeholder="Edad" class="px-4 py-3"/><input id="add-cumple" type="date" class="px-4 py-3"/></div>
+          <div class="grid grid-cols-2 gap-2"><input id="add-celular" placeholder="Celular" class="px-4 py-3"/><input id="add-zona" placeholder="Zona" list="zonasListAdd" class="px-4 py-3"/><datalist id="zonasListAdd">${ZONAS.map(z=>`<option value="${z}">`).join('')}</datalist></div>
+          <input id="add-direccion" placeholder="Dirección" class="px-4 py-3"/>
+          <select id="add-estado" class="px-4 py-3"><option>Nuevo</option><option>Activo</option><option>En seguimiento</option></select>
+          <textarea id="add-notas" placeholder="Notas (cómo lo conociste, etc)" rows="2" class="px-4 py-3"></textarea>
+          <div class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-[10px] p-3 text-[11px] text-[#64748B]"><b>¿Qué pasa después?</b><br>• El joven entra a la lista general<br>• Si eres líder, queda a tu cargo temporalmente<br>• El Admin lo redistribuirá en la próxima reasignación mensual aleatoria<br>• Queda guardado offline automáticamente</div>
+          <button onclick="saveNuevoJovenGeneral()" class="w-full py-3 btn-primary">+ Agregar a lista general ✅</button>
+          <button onclick="renderTab('${isLider()?'misjovenes':'jovenes'}')" class="w-full py-3 btn-secondary">Cancelar • Volver a mis jóvenes</button>
+        </div>
+      </div>
+    </div>`;
+  } else if(tab==='jovenes'){
+    // Solo admin
+    let enriched = getFilteredJovenes(forUser);
+    const total = enriched.length;
+    const paginated = enriched.slice(0, jovenesPage*jovenesPerPage);
+    const hasMore = total > paginated.length;
+    main.innerHTML=`<div class="space-y-4">
+      <div class="card p-4 sm:p-5"><div class="flex flex-col sm:flex-row gap-3 justify-between"><div><h2 class="h-title">Jóvenes (todos) <span class="ml-2 px-2 py-0.5 rounded-full bg-[#0F172A] text-white text-[10px]">${total} / ${RAW_JOVENES.length}</span></h2></div><div class="flex gap-2 w-full sm:w-auto"><button onclick="openMassWA()" class="flex-1 sm:flex-none px-4 py-2.5 btn-secondary">📱 Masivo</button><button onclick="openModalJoven()" class="flex-1 sm:flex-none px-5 py-2.5 btn-primary">+ Nuevo</button></div></div>
+        <div class="mt-4 flex flex-col sm:flex-row gap-2"><input value="${fSearch}" oninput="fSearch=this.value; jovenesPage=1; renderTab('jovenes')" placeholder="Buscar joven..." class="flex-1 px-4 py-2.5"/><select onchange="fEstado=this.value; jovenesPage=1; renderTab('jovenes')" class="px-3 py-2.5 border border-[#E2E8F0] rounded-[10px] text-xs bg-white"><option value="">Estados</option><option ${fEstado==='Activo'?'selected':''}>Activo</option><option ${fEstado==='Nuevo'?'selected':''}>Nuevo</option><option ${fEstado==='En seguimiento'?'selected':''}>En seguimiento</option></select><select onchange="fZona=this.value; jovenesPage=1; renderTab('jovenes')" class="px-3 py-2.5 border border-[#E2E8F0] rounded-[10px] text-xs bg-white"><option value="">Zonas</option>${ZONAS.map(z=>`<option ${fZona===z?'selected':''}>${z}</option>`).join('')}</select></div>
+      </div>
+      <div class="space-y-2.5">${paginated.map(j=>{ const fotoHtml = j.foto ? `<img src="${j.foto}">` : j.joven.charAt(0); return `<div class="card12 p-4 flex flex-col sm:flex-row gap-4"><div class="avatar hidden sm:grid">${fotoHtml}</div><div class="flex-1 min-w-0"><div class="flex flex-wrap gap-2 items-center"><span class="font-bold text-[14px]">${j.joven}</span><span class="badge ${j.estado==='Activo'?'bg-[#0F172A] text-white border-[#0F172A]':j.estado==='Nuevo'?'bg-emerald-50 text-emerald-700 border-emerald-200':'bg-amber-50 text-amber-700 border-amber-200'}">${j.estado}</span><span class="badge bg-white text-[#64748B] border-[#E2E8F0]">${j.lider}</span></div><div class="mt-2 text-[12px] text-[#475569]">📍 ${j.zona} • 📱 ${j.celular||'—'} • 🕒 ${j.ultimoContacto} • ${j.dias}d ${j.sem.label}</div></div><div class="flex gap-2 shrink-0"><button onclick="openModalJoven('${j.id}')" class="btn-edit">✎ Editar</button><button onclick="deleteJoven('${j.id}')" class="btn-delete">Eliminar</button></div></div>`}).join('')}</div>
+      ${hasMore?`<button onclick="jovenesPage++; renderTab('jovenes')" class="w-full py-3 card text-[13px] font-bold">Cargar más 10 • Quedan ${total-paginated.length}</button>`:`<div class="text-center text-[11px] text-[#94A3B8] py-3">Mostrando ${paginated.length} de ${total}</div>`}
+    </div>`;
+  } else if(tab==='zonas'){
+    main.innerHTML=`<div class="space-y-4"><div class="card p-4 sm:p-5"><div class="flex justify-between"><h2 class="h-title">Zonas <span class="ml-2 px-2 py-0.5 rounded-full bg-[#0F172A] text-white text-[10px]">${ZONAS.length}</span></h2>${isAdmin()?`<button onclick="openModalZona()" class="px-5 py-2.5 btn-primary">+ Nueva zona</button>`:''}</div><div class="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">${ZONAS.map(z=>{ const miembros = forUser.filter(j=>j.zona===z); return `<div class="card12 p-4 space-y-2"><div class="flex justify-between items-center"><span class="h-title !text-[13px]">📍 ${z}</span><span class="badge bg-[#0F172A] text-white border-[#0F172A]">${miembros.length}</span></div><div class="text-[11px] bg-[#F8FAFC] border border-[#E2E8F0] rounded-[10px] p-2.5 text-[#64748B] max-h-[80px] overflow-auto">${miembros.map(m=>`• ${m.joven} (${m.estado}) - ${m.lider}`).join('<br>')||'Sin miembros'}</div></div>`}).join('')}</div></div></div>`;
+  } else if(tab==='programa'){
+    const isReadOnly = isLider();
+    main.innerHTML=`<div class="space-y-4"><div class="card p-4 sm:p-5"><div class="flex justify-between"><div><h2 class="h-title !text-[14px]">Programa semanal ${isReadOnly?'<span class="ml-2 text-[10px] bg-[#F1F5F9] border border-[#E2E8F0] px-2 py-0.5 rounded-full">Solo lectura para líderes</span>':''}</h2></div>${isAdmin()?`<button onclick="openModalCargo()" class="px-5 py-2.5 btn-primary">+ Añadir cargo</button>`:''}</div><div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3"><div><label class="text-[11px] uppercase font-bold text-[#64748B]">📆 Fecha</label><input type="date" value="${PROGRAMA.fecha}" ${isReadOnly?'disabled':''} oninput="PROGRAMA.fecha=this.value; renderVistaPrevia(); saveToLocal()" class="mt-1.5 w-full px-4 py-3 ${isReadOnly?'!bg-[#F8FAFC]':''}"/></div>${CARGOS_PROGRAMA.map(c=>`<div class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-[12px] p-3"><div class="flex justify-between items-center"><label class="text-[11px] uppercase font-bold text-[#64748B]">${c.icon} ${c.label}</label>${isAdmin()?`<button onclick="deleteCargo('${c.key}')" class="text-[10px] px-2 py-1 rounded-full border border-[#E2E8F0] bg-white">✕</button>`:''}</div><select ${isReadOnly?'disabled':''} id="prog-${c.key}" onchange="PROGRAMA['${c.key}']=this.value; renderVistaPrevia(); saveToLocal()" class="mt-2 w-full px-3 py-2.5 ${isReadOnly?'!bg-[#F1F5F9]':''}"><option value="">Seleccionar líder</option>${LIDERES.filter(l=>l.activo).map(l=>`<option ${PROGRAMA[c.key]===l.nombre?'selected':''} value="${l.nombre}">${l.nombre}</option>`).join('')}</select></div>`).join('')}</div>${isAdmin()?`<div class="mt-5 flex gap-2"><button onclick="randomPrograma()" class="flex-1 py-3 btn-primary">🎲 Asignar aleatoriamente</button><button onclick="clearPrograma()" class="px-5 py-3 btn-secondary">Limpiar</button></div>`:''}<div class="mt-8"><h4 class="text-[11px] uppercase font-bold text-[#64748B] mb-3">VISTA PREVIA OFICIAL • SÓLIDA</h4><div class="border border-[#0F172A] rounded-[16px] overflow-hidden"><div class="bg-[#0F172A] text-white p-4 flex justify-between items-center"><div class="flex items-center gap-2"><div class="w-8 h-8 rounded-[8px] bg-white text-[#0F172A] grid place-items-center font-black text-sm">C</div><div><div class="font-black text-sm tracking-tighter">conexzion</div><div class="text-[8px] tracking-[0.2em] opacity-70">MINISTERIO JUVENIL</div></div></div><div class="text-right"><div class="text-[11px] font-bold">${PROGRAMA.fecha}</div><div class="text-[10px] opacity-70">Programa Oficial</div></div></div><div class="bg-white p-4 space-y-0 divide-y divide-[#E2E8F0]" id="vistaPreviaContent">${CARGOS_PROGRAMA.map(c=>`<div class="flex justify-between py-3"><span class="text-[13px] font-semibold">${c.icon} ${c.label}:</span><span class="text-[13px] font-bold px-3 py-1 rounded-full ${PROGRAMA[c.key] ? 'bg-[#0F172A] text-white' : 'bg-[#F1F5F9] text-[#94A3B8] border border-[#E2E8F0]'}">${PROGRAMA[c.key]||'— Por asignar —'}</span></div>`).join('')}</div></div></div></div></div>`;
+  } else if(tab==='cumples'){
+    const meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    const all = [...forUser.map(j=>({...j, nombre:j.joven, tipo:'joven'})), ...LIDERES.map(l=>({...l, tipo:'lider'}))].filter(p=> parseMonth(p.cumple)>=0);
+    const porMes = Array.from({length:12}, (_,i)=> all.filter(p=> parseMonth(p.cumple)===i));
+    main.innerHTML=`<div class="space-y-4"><div class="card p-4 sm:p-5"><h2 class="h-title">Cumpleaños <span class="ml-2 px-2 py-0.5 rounded-full bg-[#0F172A] text-white text-[10px]">${all.length} en el año</span> </h2><div class="mt-4 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">${meses.map((m,i)=>`<button onclick="cumpleMesFiltro=${i}; renderTab('cumples')" class="px-2 py-2.5 rounded-[10px] text-[11px] border font-bold ${cumpleMesFiltro===i?'bg-[#0F172A] text-white border-[#0F172A]':'bg-white border-[#E2E8F0] text-[#64748B]'}">${m} (${porMes[i].length})</button>`).join('')}</div></div><div class="card p-4 sm:p-5"><h3 class="h-title !text-[13px]">${meses[cumpleMesFiltro]} <span class="ml-2 px-2 py-0.5 rounded-full bg-[#F1F5F9] border border-[#E2E8F0] text-[11px]">${porMes[cumpleMesFiltro].length}</span></h3><div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">${porMes[cumpleMesFiltro].map(p=>{ const fotoHtml = p.foto ? `<img src="${p.foto}">` : p.nombre.charAt(0); return `<div class="card12 p-4 space-y-3"><div class="flex gap-3"><div class="avatar">${fotoHtml}</div><div class="min-w-0"><div class="font-bold text-[13px] truncate">${p.nombre} ${yi(p.cumple)?'<span class="ml-1 badge bg-[#0F172A] text-white">HOY</span>':''}</div><div class="text-[11px] text-[#64748B] truncate">🎂 ${fmtCumple(p.cumple)} • ${p.tipo==='lider'?p.cargo:p.lider}</div></div></div><div class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-[10px] p-3 space-y-2"><label class="text-[10px] uppercase font-bold text-[#64748B]">Mensaje íntimo variado</label><textarea id="mc-${p.id||p.nombre.replace(/\s/g,'_')}" oninput="updateCumple('${(p.id||p.nombre).replace(/'/g,"\\'")}', '${p.tipo}', this.value)" rows="3" class="w-full px-3 py-2.5">${p.cumpleMensajePersonal||''}</textarea><div class="flex gap-2"><button onclick="useDefaultCumple('${(p.id||p.nombre).replace(/'/g,"\\'")}', '${p.tipo}')" class="text-[10px] px-3 py-2 btn-secondary w-full">✨ Variado</button><button onclick="sendCumple('${(p.id||p.nombre).replace(/'/g,"\\'")}', '${p.tipo}')" class="flex-1 py-2 btn-whatsapp text-[11px]">WhatsApp</button></div></div></div>`}).join('') || `<div class="col-span-2 text-center py-12"><div class="text-3xl">📅</div><div class="text-[12px] text-[#94A3B8]">No hay cumpleaños en ${meses[cumpleMesFiltro]}</div></div>`}</div></div></div>`;
+  } else if(tab==='reasignacion'){
+    if(!isAdmin()){ main.innerHTML=`<div class='card p-6 text-center'><div class='text-2xl'>🔒</div><div class='h-title mt-2'>Solo Admin</div><p class='text-[12px] text-[#64748B] mt-1'>La reasignación mensual solo es visible para el administrador.</p></div>`; return; }
+    const last = localStorage.getItem('conexzion_last_reasign') || 'Nunca';
+    const diff = last==='Nunca'?0:Math.floor((new Date() - new Date(last))/86400000);
+    main.innerHTML=`<div class="space-y-4 max-w-3xl mx-auto">
+      <div class="card p-6"><div class="flex items-start gap-4"><div class="w-12 h-12 rounded-[12px] bg-[#0F172A] text-white grid place-items-center text-xl">♻️</div><div class="flex-1"><h2 class="h-title !text-[18px]">Reasignación mensual • Solo Admin</h2><div class="mt-4 grid grid-cols-3 gap-3 text-[11px]"><div class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-[12px] p-3 text-center"><div class="font-black text-[20px]">${LIDERES.filter(l=>l.activo).length}</div><div class="text-[#64748B]">Líderes activos</div></div><div class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-[12px] p-3 text-center"><div class="font-black text-[20px]">${RAW_JOVENES.filter(j=>!j.esGeneral).length}</div><div class="text-[#64748B]">Asignables</div></div><div class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-[12px] p-3 text-center"><div class="font-black text-[20px]">${RAW_JOVENES.filter(j=>j.esGeneral).length}</div><div class="text-[#64748B]">Generales</div></div></div><div class="mt-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-[12px] p-4"><div class="flex justify-between text-[12px]"><span class="text-[#64748B]">Última reasignación:</span><b>${last}</b></div><div class="flex justify-between text-[12px] mt-1"><span class="text-[#64748B]">Días desde última:</span><b>${last==='Nunca'?'—':diff+' días'}</b></div><div class="flex justify-between text-[12px] mt-1"><span class="text-[#64748B]">Próxima recomendada:</span><b>${last==='Nunca'?'Ahora': (30-diff>0?`En ${30-diff} días`:'¡Ahora!') }</b></div></div><button onclick="openReasignModal()" class="mt-5 w-full py-3.5 btn-primary text-[13px]">🔀 Reasignar ahora (aleatorio equilibrado)</button><div class="mt-3 text-[11px] text-[#94A3B8] text-center">Se guarda automáticamente en localStorage + offline • Los líderes verán sus nuevos jóvenes al entrar</div></div></div></div>
+      <div class="card p-5"><h3 class="h-title !text-[13px]">📊 Distribución actual</h3><div class="mt-3 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">${LIDERES.filter(l=>l.activo).map(l=>{ const count=RAW_JOVENES.filter(j=>j.lider===l.nombre && !j.esGeneral).length; return `<div class="bg-white border border-[#E2E8F0] rounded-[10px] p-3 text-center"><div class="font-bold text-[12px] truncate">${l.nombre.split(' ')[0]} ${l.nombre.split(' ')[1]||''}</div><div class="text-[20px] font-black mt-1">${count}</div><div class="text-[10px] text-[#94A3B8]">jóvenes</div><div class="mt-2 w-full bg-[#F1F5F9] rounded-full h-1.5"><div class="bg-[#0F172A] h-1.5 rounded-full" style="width:${Math.min(100, (count/Math.max(1, RAW_JOVENES.filter(j=>!j.esGeneral).length/LIDERES.filter(l=>l.activo).length)*50))}%"></div></div></div>`}).join('')}</div></div>
+    </div>`;
+  } else if(tab==='miperfil'){
+    const me = LIDERES.find(l=>l.nombre===currentUser);
+    if(!me){ main.innerHTML=`<div class="card p-6 text-center"><div class="text-3xl">👤</div><div class="h-title mt-2">Mi perfil no encontrado</div></div>`; return; }
+    const fotoHtml = me.foto ? `<img src="${me.foto}">` : me.nombre.charAt(0);
+    main.innerHTML=`<div class="space-y-4 max-w-2xl mx-auto">
+      <div class="card p-6 text-center"><div class="avatar !w-20 !h-20 !text-[24px] mx-auto">${fotoHtml}</div><div class="mt-3 h-title !text-[18px]">${me.nombre}</div><div class="mt-1 flex justify-center gap-2"><span class="badge bg-[#0F172A] text-white border-[#0F172A]">${me.cargo}</span><span class="badge bg-white border-[#E2E8F0] text-[#64748B]">${me.genero}</span><span class="badge ${me.activo?'bg-emerald-50 text-emerald-700 border-emerald-200':'bg-red-50 text-red-700 border-red-200'}">${me.activo?'Activo':'Inactivo'}</span></div><div class="mt-4 grid grid-cols-3 gap-3 text-[11px]"><div class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-[10px] p-3 text-center"><div class="font-black text-[16px]">${RAW_JOVENES.filter(j=>j.lider===me.nombre && !j.esGeneral).length}</div><div class="text-[#94A3B8]">Mis jóvenes</div></div><div class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-[10px] p-3 text-center"><div class="font-black text-[16px]">${RAW_JOVENES.filter(j=>j.lider===me.nombre && j.estado==='Activo').length}</div><div class="text-[#94A3B8]">Activos</div></div><div class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-[10px] p-3 text-center"><div class="font-black text-[16px]">${RAW_JOVENES.filter(j=> j.lider===me.nombre && diasDesde(j.ultimoContacto)>14).length}</div><div class="text-[#94A3B8]">Críticos</div></div></div></div>
+      <div class="card p-5"><h3 class="h-title !text-[13px]">Mis datos</h3><div class="mt-3 space-y-2 text-[13px]"><div class="flex justify-between bg-[#F8FAFC] border border-[#E2E8F0] rounded-[10px] p-3"><span class="text-[#64748B]">📱 Celular</span><b>${me.celular||'—'}</b></div><div class="flex justify-between bg-[#F8FAFC] border border-[#E2E8F0] rounded-[10px] p-3"><span class="text-[#64748B]">🎂 Cumple</span><b>${fmtCumple(me.cumple)}</b></div><div class="flex justify-between bg-[#F8FAFC] border border-[#E2E8F0] rounded-[10px] p-3"><span class="text-[#64748B]">📍 Zona</span><b>${me.zona||'—'}</b></div><div class="flex justify-between bg-[#F8FAFC] border border-[#E2E8F0] rounded-[10px] p-3"><span class="text-[#64748B]">👤 Rol</span><b>${me.rol||'—'}</b></div><div class="flex justify-between bg-[#F8FAFC] border border-[#E2E8F0] rounded-[10px] p-3"><span class="text-[#64748B]">🔑 Contraseña</span><b>${me.password||'1234'}</b></div></div><button onclick="openModalLider('${me.id}')" class="mt-4 w-full py-3 btn-primary">✎ Editar mi perfil + foto</button></div>
+      <div class="card p-5"><h3 class="h-title !text-[13px]">Mis jóvenes a cargo (resumen)</h3><div class="mt-3 space-y-2">${RAW_JOVENES.filter(j=>j.lider===me.nombre).slice(0,10).map(j=>`<div class="flex justify-between items-center bg-white border border-[#E2E8F0] rounded-[10px] p-2.5 text-[12px]"><span><b>${j.joven}</b> • ${j.estado} • ${j.dias?j.dias+'d':''}</span><span class="text-[#94A3B8] text-[11px]">${fmtCumple(j.cumple)}</span></div>`).join('') || '<div class="text-[12px] text-[#94A3B8]">Sin jóvenes asignados aún</div>'}</div><button onclick="renderTab('misjovenes')" class="mt-3 w-full py-2.5 btn-secondary">Ver todos mis jóvenes 👥</button></div>
+    </div>`;
+  }
+}
+
+function renderVistaPrevia(){
+  const container = document.getElementById('vistaPreviaContent');
+  if(!container) return;
+  container.innerHTML = CARGOS_PROGRAMA.map(c=>`<div class="flex justify-between py-3"><span class="text-[13px] font-semibold">${c.icon} ${c.label}:</span><span class="text-[13px] font-bold px-3 py-1 rounded-full ${PROGRAMA[c.key] ? 'bg-[#0F172A] text-white' : 'bg-[#F1F5F9] text-[#94A3B8] border border-[#E2E8F0]'}">${PROGRAMA[c.key]||'— Por asignar —'}</span></div>`).join('');
+}
+
+function handleFotoInput(inputId, previewId){
+  const input=document.getElementById(inputId);
+  const file=input.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{ 
+    if(inputId.includes('lider')) tempLider.foto=e.target.result;
+    else tempJoven.foto=e.target.result;
+    const preview=document.getElementById(previewId);
+    if(preview) preview.innerHTML=`<img src="${e.target.result}" class="w-12 h-12 rounded-[10px] object-cover">`;
+  };
+  reader.readAsDataURL(file);
+}
+
+let tempLider = {};
+function openModalLider(id=null){
+  if(isLider() && id && LIDERES.find(x=>x.id===id)?.nombre!==currentUser){ showToast('Como líder solo puedes editar tu propio perfil'); return; }
+  editingLiderId=id;
+  const l = id ? LIDERES.find(x=>x.id===id) : null;
+  tempLider = l ? {...l} : {nombre:'', cargo:'LIDER', genero:'Varón', celular:'', zona:ZONAS[0]||'', activo:true, password:'1234', cumple:'', direccion:'', rol:'', notas:'', foto:'', cumpleMensajePersonal:''};
+  document.getElementById('modalLiderTitle').textContent = id ? 'Editar líder' : '+ Nuevo líder (solo Admin)';
+  document.getElementById('modalLiderBody').innerHTML = `
+    <div class="flex gap-3 items-center"><div id="liderFotoPreview" class="avatar !w-12 !h-12">${tempLider.foto?`<img src="${tempLider.foto}">`: (tempLider.nombre||'?').charAt(0)}</div><div><label class="text-[11px] uppercase font-bold text-[#64748B]">Foto de perfil</label><input id="nl-foto" type="file" accept="image/*" onchange="handleFotoInput('nl-foto','liderFotoPreview')" class="mt-1 block text-[11px]"/></div></div>
+    <input id="nl-nombre" value="${tempLider.nombre||''}" placeholder="Nombre*" class="px-4 py-3" ${isLider()?'readonly':''}/>
+    <div class="grid grid-cols-2 gap-2"><select id="nl-cargo" class="px-3 py-3" ${!isAdmin()?'disabled':''}><option ${tempLider.cargo==='LIDER'?'selected':''}>LIDER</option><option ${tempLider.cargo==='LIDER PRINCIPAL'?'selected':''}>LIDER PRINCIPAL</option></select><select id="nl-genero" class="px-3 py-3"><option ${tempLider.genero==='Varón'?'selected':''}>Varón</option><option ${tempLider.genero==='Dama'?'selected':''}>Dama</option></select></div>
+    <div class="grid grid-cols-2 gap-2"><input id="nl-celular" value="${tempLider.celular||''}" placeholder="Celular" class="px-4 py-3"/><input id="nl-cumple" value="${tempLider.cumple||''}" type="date" class="px-4 py-3"/></div>
+    <input id="nl-direccion" value="${tempLider.direccion||''}" placeholder="Dirección" class="px-4 py-3"/>
+    <div class="grid grid-cols-2 gap-2"><input id="nl-rol" value="${tempLider.rol||''}" placeholder="Rol iglesia" class="px-4 py-3"/><input id="nl-password" value="${tempLider.password||'1234'}" placeholder="Contraseña" class="px-4 py-3"/></div>
+    <input id="nl-zona" value="${tempLider.zona||''}" list="zonasList" placeholder="Zona" class="px-4 py-3"/><datalist id="zonasList">${ZONAS.map(z=>`<option value="${z}">`).join('')}</datalist>
+    <textarea id="nl-notas" placeholder="Notas" rows="2" class="px-4 py-3">${tempLider.notas||''}</textarea>
+    ${isAdmin()?`<label class="flex gap-2 text-xs"><input id="nl-activo" type="checkbox" ${tempLider.activo?'checked':''}/> Activo</label>`:`<div class="text-[11px] text-[#94A3B8]">Líder no puede cambiar estado activo/cargo (solo Admin)</div>`}
+  `;
+  document.getElementById('modalLider').classList.remove('hidden');
+}
+function closeModalLider(){ document.getElementById('modalLider').classList.add('hidden'); }
+function saveLider(){
+  if(isLider() && editingLiderId && LIDERES.find(x=>x.id===editingLiderId)?.nombre!==currentUser){ showToast('Sin permiso'); return; }
+  if(!isAdmin() && !editingLiderId){ showToast('Solo Admin puede crear líderes'); return; }
+  const data = {nombre: document.getElementById('nl-nombre').value.trim(), cargo: document.getElementById('nl-cargo')?.value||'LIDER', genero: document.getElementById('nl-genero').value, celular: document.getElementById('nl-celular').value, cumple: document.getElementById('nl-cumple').value, direccion: document.getElementById('nl-direccion').value, rol: document.getElementById('nl-rol').value, password: document.getElementById('nl-password').value, zona: document.getElementById('nl-zona').value, notas: document.getElementById('nl-notas').value, activo: isAdmin()?document.getElementById('nl-activo')?.checked||true:true, foto: tempLider.foto||'', cumpleMensajePersonal: tempLider.cumpleMensajePersonal||''};
+  if(!data.nombre) { showToast('Nombre requerido'); return; }
+  if(editingLiderId){ const idx=LIDERES.findIndex(l=>l.id===editingLiderId); if(idx>=0) LIDERES[idx]={...LIDERES[idx], ...data}; } else { const id='l'+Date.now(); LIDERES.push({id, ...data}); }
+  saveToLocal(); closeModalLider(); renderTab(isAdmin()?'lideres':'miperfil'); showToast('Líder guardado ✅');
+}
+let tempJoven={};
+function openModalJoven(id=null){
+  if(id && !canEditJoven(RAW_JOVENES.find(x=>x.id===id))){ showToast('No puedes editar este joven'); return; }
+  editingJovenId=id;
+  const j = id ? RAW_JOVENES.find(x=>x.id===id) : null;
+  tempJoven = j ? {...j, historial: j.historial||[]} : {joven:'', edad:'', cumple:'', celular:'', zona:ZONAS[0]||'', estado:'Nuevo', direccion:'', rol:'', notas:'', esGeneral:false, lider:currentUser!=='Admin'?currentUser:(LIDERES[0]?.nombre||''), creador:currentUser, ultimoContacto:new Date().toISOString().slice(0,10), foto:'', historial:[]};
+  document.getElementById('modalJovenTitle').textContent = id ? 'Editar joven' : '+ Nuevo joven (lista general)';
+  document.getElementById('modalJovenBody').innerHTML = `
+    <div class="flex gap-3 items-center"><div id="jovenFotoPreview" class="avatar !w-12 !h-12">${tempJoven.foto?`<img src="${tempJoven.foto}">`: (tempJoven.joven||'?').charAt(0)}</div><div><label class="text-[11px] uppercase font-bold text-[#64748B]">Foto de perfil</label><input id="nj-foto" type="file" accept="image/*" onchange="handleFotoInput('nj-foto','jovenFotoPreview')" class="mt-1 block text-[11px]"/></div></div>
+    <input id="nj-joven" value="${tempJoven.joven||''}" placeholder="Nombre*" class="px-4 py-3"/>
+    <div class="grid grid-cols-2 gap-2"><input id="nj-edad" value="${tempJoven.edad||''}" type="number" placeholder="Edad" class="px-4 py-3"/><input id="nj-cumple" value="${tempJoven.cumple||''}" type="date" class="px-4 py-3"/></div>
+    <div class="grid grid-cols-2 gap-2"><input id="nj-celular" value="${tempJoven.celular||''}" placeholder="Celular" class="px-4 py-3"/><input id="nj-telefono" value="${tempJoven.telefono||''}" placeholder="Teléfono" class="px-4 py-3"/></div>
+    <select id="nj-zona" class="px-4 py-3"><option value="">Sin zona</option>${ZONAS.map(z=>`<option ${tempJoven.zona===z?'selected':''}>${z}</option>`).join('')}</select>
+    <select id="nj-estado" class="px-4 py-3"><option ${tempJoven.estado==='Activo'?'selected':''}>Activo</option><option ${tempJoven.estado==='Nuevo'?'selected':''}>Nuevo</option><option ${tempJoven.estado==='En seguimiento'?'selected':''}>En seguimiento</option><option ${tempJoven.estado==='Por visitar'?'selected':''}>Por visitar</option></select>
+    <input id="nj-direccion" value="${tempJoven.direccion||''}" placeholder="Dirección" class="px-4 py-3"/>
+    <div class="grid grid-cols-2 gap-2"><input id="nj-rol" value="${tempJoven.rol||''}" placeholder="Rol iglesia" class="px-4 py-3"/><input id="nj-notas" value="${tempJoven.notas||''}" placeholder="Notas" class="px-4 py-3"/></div>
+    <label class="flex gap-2 text-xs"><input id="nj-general" type="checkbox" ${tempJoven.esGeneral?'checked':''}/> General (visible para todos los líderes)</label>
+    ${isAdmin()?`<select id="nj-lider" class="px-4 py-3"><option value="">Líder</option>${LIDERES.map(l=>`<option ${tempJoven.lider===l.nombre?'selected':''}>${l.nombre}</option>`).join('')}</select>`:`<div class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-[10px] p-3 text-[11px]"><b>Asignado a:</b> ${tempJoven.lider||currentUser} (tu cargo) • En reasignación mensual el Admin lo redistribuirá</div>`}
+    <div class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-[10px] p-3"><label class="text-[11px] uppercase font-bold text-[#64748B]">Último contacto • Auto-fecha</label><input id="nj-ultimo" type="date" value="${tempJoven.ultimoContacto||''}" class="mt-1 w-full px-3 py-2"/></div>
+  `;
+  const histDiv=document.getElementById('jovenHistory');
+  const histList=document.getElementById('jovenHistoryList');
+  if(tempJoven.historial && tempJoven.historial.length>0){ histDiv.classList.remove('hidden'); histList.innerHTML=tempJoven.historial.slice().reverse().map(h=>`<div class="flex justify-between bg-white border border-[#E2E8F0] rounded-[8px] px-2 py-1"><span>${h.fecha}</span><span class="text-[#64748B]">${h.nota||'Contacto'}</span></div>`).join(''); } else { histDiv.classList.add('hidden'); }
+  document.getElementById('modalJoven').classList.remove('hidden');
+}
+function closeModalJoven(){ document.getElementById('modalJoven').classList.add('hidden'); }
+function saveJoven(){
+  const data = {joven: document.getElementById('nj-joven').value.trim(), edad: document.getElementById('nj-edad').value ? parseInt(document.getElementById('nj-edad').value) : null, cumple: document.getElementById('nj-cumple').value, celular: document.getElementById('nj-celular').value, telefono: document.getElementById('nj-telefono').value || document.getElementById('nj-celular').value, zona: document.getElementById('nj-zona').value, estado: document.getElementById('nj-estado').value, direccion: document.getElementById('nj-direccion').value, rol: document.getElementById('nj-rol').value, notas: document.getElementById('nj-notas').value, esGeneral: document.getElementById('nj-general').checked, lider: isAdmin() ? (document.getElementById('nj-lider')?.value || currentUser) : (tempJoven.lider || currentUser), creador: tempJoven.creador || currentUser, ultimoContacto: document.getElementById('nj-ultimo').value || new Date().toISOString().slice(0,10), foto: tempJoven.foto||'', cumpleMensajePersonal: tempJoven.cumpleMensajePersonal||'', historial: tempJoven.historial||[]};
+  if(!data.joven) { showToast('Nombre requerido'); return; }
+  const hoyStr=new Date().toISOString().slice(0,10);
+  if(editingJovenId){
+    const idx=RAW_JOVENES.findIndex(j=>j.id===editingJovenId);
+    if(idx>=0){
+      if(!canEditJoven(RAW_JOVENES[idx])){ showToast('Sin permiso para editar'); return; }
+      const old=RAW_JOVENES[idx];
+      if(old.ultimoContacto!==data.ultimoContacto){ data.historial = [...(old.historial||[]), {fecha: hoyStr, nota: 'Contacto actualizado'}]; }
+      RAW_JOVENES[idx]={...old, ...data};
+    }
+  } else {
+    const id='j'+Date.now();
+    data.historial=[{fecha: hoyStr, nota: 'Creado por ' + currentUser}];
+    RAW_JOVENES.push({id, ...data});
+  }
+  saveToLocal(); closeModalJoven(); jovenesPage=1; renderTab(isAdmin()?'jovenes':'misjovenes'); showToast('Joven guardado ✅ Lista general');
+}
+function saveNuevoJovenGeneral(){
+  const nombre=document.getElementById('add-nombre').value.trim();
+  if(!nombre){ showToast('Nombre requerido'); return; }
+  const data = {
+    id:'j'+Date.now(),
+    joven: nombre,
+    edad: document.getElementById('add-edad').value ? parseInt(document.getElementById('add-edad').value) : null,
+    cumple: document.getElementById('add-cumple').value,
+    celular: document.getElementById('add-celular').value,
+    telefono: document.getElementById('add-celular').value,
+    zona: document.getElementById('add-zona').value || ZONAS[0],
+    estado: document.getElementById('add-estado').value,
+    direccion: document.getElementById('add-direccion').value,
+    rol: '',
+    notas: document.getElementById('add-notas').value,
+    esGeneral: false,
+    lider: currentUser==='Admin' ? (LIDERES[0]?.nombre||'Sin asignar') : currentUser,
+    creador: currentUser,
+    ultimoContacto: new Date().toISOString().slice(0,10),
+    foto: '',
+    historial: [{fecha: new Date().toISOString().slice(0,10), nota: 'Creado por ' + currentUser + ' en lista general'}],
+    cumpleMensajePersonal: ''
+  };
+  RAW_JOVENES.push(data);
+  saveToLocal();
+  showToast('Joven agregado a lista general ✅ Queda a tu cargo hasta reasignación mensual');
+  document.getElementById('add-nombre').value=''; document.getElementById('add-edad').value=''; document.getElementById('add-cumple').value=''; document.getElementById('add-celular').value=''; document.getElementById('add-zona').value=''; document.getElementById('add-direccion').value=''; document.getElementById('add-notas').value='';
+  setTimeout(()=>renderTab(isLider()?'misjovenes':'jovenes'), 800);
+}
+function deleteJoven(id){ 
+  const j=RAW_JOVENES.find(x=>x.id===id);
+  if(!j) return;
+  if(!canDeleteJoven(j)){ showToast('No puedes eliminar este joven (solo Admin o tu propio joven no general)'); return; }
+  RAW_JOVENES=RAW_JOVENES.filter(j=>j.id!==id); saveToLocal(); renderTab(isAdmin()?'jovenes':'misjovenes'); showToast('Joven eliminado'); 
+}
+function openModalZona(){ if(!isAdmin()){ showToast('Solo Admin puede crear zonas'); return; } document.getElementById('zonaInput').value=''; document.getElementById('modalZona').classList.remove('hidden'); }
+function closeModalZona(){ document.getElementById('modalZona').classList.add('hidden'); }
+function saveZona(){ const name=document.getElementById('zonaInput').value.trim(); if(!name) { showToast('Nombre requerido'); return; } if(ZONAS.includes(name)) { showToast('Ya existe'); return; } ZONAS.push(name); saveToLocal(); closeModalZona(); renderTab('zonas'); showToast('Zona creada'); }
+function openModalCargo(){ if(!isAdmin()){ showToast('Solo Admin puede añadir cargos'); return; } document.getElementById('cargoInput').value=''; document.getElementById('modalCargoProg').classList.remove('hidden'); }
+function closeModalCargo(){ document.getElementById('modalCargoProg').classList.add('hidden'); }
+function saveCargo(){ const label=document.getElementById('cargoInput').value.trim(); if(!label) { showToast('Nombre requerido'); return; } const key = label.toLowerCase().replace(/[^a-z0-9]+/g,'_') + '_' + Date.now(); CARGOS_PROGRAMA.push({key, label, icon:'✨'}); PROGRAMA[key]=''; saveToLocal(); closeModalCargo(); renderTab('programa'); showToast('Cargo añadido ✅'); }
+function deleteCargo(key){ if(!isAdmin()){ showToast('Solo Admin'); return; } CARGOS_PROGRAMA=CARGOS_PROGRAMA.filter(c=>c.key!==key); delete PROGRAMA[key]; saveToLocal(); renderTab('programa'); showToast('Cargo eliminado'); }
+function randomPrograma(){
+  if(!isAdmin()){ showToast('Solo Admin puede asignar programa'); return; }
+  const activos = LIDERES.filter(l=>l.activo);
+  if(activos.length<2) { showToast('Necesitas al menos 2 líderes activos'); return; }
+  const shuffle = [...activos].sort(()=>0.5-Math.random());
+  const varones = activos.filter(l=>l.genero==='Varón');
+  const damas = activos.filter(l=>l.genero==='Dama');
+  if(varones.length && damas.length){ PROGRAMA.direccionV = varones[Math.floor(Math.random()*varones.length)].nombre; PROGRAMA.direccionD = damas[Math.floor(Math.random()*damas.length)].nombre; }
+  let idx=0;
+  CARGOS_PROGRAMA.forEach(c=>{ if(c.key==='direccionV' || c.key==='direccionD') return; PROGRAMA[c.key]=shuffle[idx % shuffle.length].nombre; idx++; });
+  PROGRAMA.fecha = new Date().toISOString().slice(0,10);
+  saveToLocal(); renderTab('programa'); showToast('Programa aleatorio 🎲');
+}
+function clearPrograma(){ if(!isAdmin()) return; CARGOS_PROGRAMA.forEach(c=>{ PROGRAMA[c.key]=''; }); saveToLocal(); renderTab('programa'); showToast('Programa limpiado'); }
+function toggleActivoLider(id){ if(!isAdmin()){ showToast('Solo Admin puede activar/desactivar'); return; } const l=LIDERES.find(x=>x.id===id); if(l){ l.activo=!l.activo; saveToLocal(); renderTab('lideres'); showToast(l.activo ? 'Líder activado ✅' : 'Líder desactivado'); } }
+function openReasignModal(){ if(!isAdmin()){ showToast('Solo Admin puede reasignar'); return; } document.getElementById('modalReasign').classList.remove('hidden'); }
+function closeReasignModal(){ document.getElementById('modalReasign').classList.add('hidden'); }
+function confirmReasign(){
+  try{
+    const activos = LIDERES.filter(l=>l.activo);
+    if(!activos.length){ showToast('No hay líderes activos'); return; }
+    const asignables = RAW_JOVENES.filter(j=>!j.esGeneral);
+    if(!asignables.length){ showToast('No hay jóvenes asignables'); return; }
+    for(let i=asignables.length-1;i>0;i--){ const r=Math.floor(Math.random()*(i+1)); const tmp=asignables[i]; asignables[i]=asignables[r]; asignables[r]=tmp; }
+    asignables.forEach((j,i)=>{ j.lider = activos[i % activos.length].nombre; });
+    const now = new Date().toISOString().slice(0,10);
+    localStorage.setItem('conexzion_last_reasign', now);
+    saveToLocal(); closeReasignModal(); renderTab('reasignacion'); showToast('¡Reasignación mensual completa! ' + asignables.length + ' jóvenes redistribuidos ✅ ' + now);
+  }catch(e){ showToast('Error: ' + e.message); }
+}
+function randomAsignacion(){ openReasignModal(); }
+window.randomAsignacion = randomAsignacion;
+window.toggleActivoLider = toggleActivoLider;
+function updateCumple(id, tipo, val){ if(tipo==='joven'){ const j=RAW_JOVENES.find(x=>x.id===id); if(j) j.cumpleMensajePersonal=val; } else { const l=LIDERES.find(x=>x.id===id || x.nombre===id); if(l) l.cumpleMensajePersonal=val; } saveToLocal(); }
+function useDefaultCumple(id, tipo){ const name = tipo==='joven' ? (RAW_JOVENES.find(x=>x.id===id)?.joven) : (LIDERES.find(x=>x.id===id || x.nombre===id)?.nombre); const def=cfVariado(name||'Amigo', id); updateCumple(id,tipo,def); renderTab('cumples'); }
+function sendCumple(id, tipo){ 
+  if(tipo==='joven'){ const j=RAW_JOVENES.find(x=>x.id===id); if(j){ const msg=j.cumpleMensajePersonal||cfVariado(j.joven, j.id); const tel=(j.telefono||j.celular||'').replace(/\D/g,''); if(tel){ const num=tel.startsWith('51')?tel:'51'+tel; window.open('https://wa.me/'+num+'?text='+encodeURIComponent(msg),'_blank'); } else { navigator.clipboard.writeText(msg).then(()=>showToast('Copiado')); } } } 
+  else { const l=LIDERES.find(x=>x.id===id || x.nombre===id); if(l){ const msg=l.cumpleMensajePersonal||cfVariado(l.nombre, l.id); const tel=(l.celular||'').replace(/\D/g,''); if(tel){ const num=tel.startsWith('51')?tel:'51'+tel; window.open('https://wa.me/'+num+'?text='+encodeURIComponent(msg),'_blank'); } else { navigator.clipboard.writeText(msg).then(()=>showToast('Copiado')); } } } 
+}
+function checkCumpleHoyModal(){
+  let forUser = isAdmin() ? RAW_JOVENES : RAW_JOVENES.filter(j=> j.lider===currentUser || j.esGeneral);
+  const hoyJ = forUser.filter(j=> yi(j.cumple));
+  const hoyL = LIDERES.filter(l=> yi(l.cumple));
+  const allHoy = [...hoyJ.map(j=>({...j, nombre:j.joven, tipo:'joven'})), ...hoyL.map(l=>({...l, tipo:'lider'}))];
+  if(allHoy.length===0) return;
+  const lastShown = localStorage.getItem('conexzion_cumple_modal_date');
+  const todayStr = new Date().toISOString().slice(0,10);
+  if(lastShown===todayStr) return;
+  document.getElementById('cumpleModalText').textContent = `${allHoy.length} persona(s) cumplen hoy`;
+  document.getElementById('cumpleModalList').innerHTML = allHoy.map(p=>`<div class="flex justify-between items-center bg-[#F8FAFC] border border-[#E2E8F0] rounded-[10px] p-2.5"><div><div class="font-bold text-[13px]">${p.nombre}</div><div class="text-[11px] text-[#64748B]">🎂 ${fmtCumple(p.cumple)} • ${p.tipo==='joven'?p.lider:p.cargo}</div></div><button onclick="sendCumple('${p.id||p.nombre}','${p.tipo}')" class="btn-whatsapp text-[11px]">Enviar</button></div>`).join('');
+  document.getElementById('modalCumple').classList.remove('hidden');
+  localStorage.setItem('conexzion_cumple_modal_date', todayStr);
+}
+function closeCumpleModal(){ document.getElementById('modalCumple').classList.add('hidden'); }
+function sendAllCumpleHoy(){
+  let forUser = isAdmin() ? RAW_JOVENES : RAW_JOVENES.filter(j=> j.lider===currentUser || j.esGeneral);
+  const hoyJ = forUser.filter(j=> yi(j.cumple));
+  const hoyL = LIDERES.filter(l=> yi(l.cumple));
+  const allHoy = [...hoyJ, ...hoyL];
+  allHoy.forEach((p,i)=>{ setTimeout(()=>{ const id=p.id||p.nombre; const tipo=p.joven?'joven':'lider'; sendCumple(id, tipo); }, i*800); });
+  showToast(`Abriendo ${allHoy.length} WhatsApp...`);
+  closeCumpleModal();
+}
+function openMassWA(){
+  let forUser = isAdmin() ? RAW_JOVENES : RAW_JOVENES.filter(j=> j.lider===currentUser || j.esGeneral);
+  const enriched = getFilteredJovenes(forUser);
+  document.getElementById('massWACount').textContent=enriched.length;
+  const template=document.getElementById('massWATemplate').value;
+  document.getElementById('massWAPreview').innerHTML=enriched.slice(0,5).map(j=>{ const msg=template.replace(/{nombre}/g, j.joven.split(' ')[0]); return `<div class="text-[11px] bg-[#F8FAFC] border border-[#E2E8F0] rounded-[8px] p-2"><b>${j.joven}:</b> ${msg.slice(0,80)}...</div>`}).join('') + (enriched.length>5?`<div class="text-[10px] text-[#94A3B8] text-center">...y ${enriched.length-5} más</div>`:'');
+  document.getElementById('modalMassWA').classList.remove('hidden');
+}
+function closeMassWA(){ document.getElementById('modalMassWA').classList.add('hidden'); }
+function sendMassWA(){
+  let forUser = isAdmin() ? RAW_JOVENES : RAW_JOVENES.filter(j=> j.lider===currentUser || j.esGeneral);
+  const enriched = getFilteredJovenes(forUser);
+  const template=document.getElementById('massWATemplate').value;
+  if(enriched.length===0){ showToast('No hay jóvenes filtrados'); return; }
+  enriched.forEach((j,i)=>{
+    setTimeout(()=>{
+      const nombre=j.joven.split(' ')[0];
+      const msg=template.replace(/{nombre}/g, nombre);
+      const tel=(j.telefono||j.celular||'').replace(/\D/g,'');
+      if(tel){ const num=tel.startsWith('51')?tel:'51'+tel; window.open('https://wa.me/'+num+'?text='+encodeURIComponent(msg),'_blank'); }
+    }, i*1200);
+  });
+  showToast(`Abriendo ${enriched.length} chats...`);
+  closeMassWA();
+}
+</script>
+</body>
+</html>

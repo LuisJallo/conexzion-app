@@ -1,0 +1,21 @@
+{
+  "name": "Conexzion - Ministerio Juvenil",
+  "short_name": "Conexzion",
+  "description": "App para gesti\u00f3n de j\u00f3venes y l\u00edderes - Conexzion Ministerio Juvenil",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#F8FAFC",
+  "theme_color": "#0F172A",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
