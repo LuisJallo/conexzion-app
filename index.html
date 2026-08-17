@@ -79,7 +79,7 @@ if ('serviceWorker' in navigator) {
   <div class="bg-white rounded-[20px] border border-[#E2E8F0] p-7 max-w-[400px] w-full">
     <div class="text-center mb-6"><div class="w-12 h-12 rounded-[12px] bg-[#0F172A] text-white grid place-items-center font-black mx-auto">C</div><div class="mt-3 font-black text-[18px] tracking-tighter">conexzion</div><div class="text-[10px] tracking-[0.2em] font-bold text-[#64748B]">MINISTERIO JUVENIL</div></div>
     <div class="space-y-3">
-      <select id="userSelect" class="w-full px-4 py-3"><option value="">Selecciona tu nombre</option><option value="admin">Admin</option></select>
+      <select id="userSelect" class="w-full px-4 py-3"><option value="">Selecciona tu nombre</option><option value="Luis Ivan jallo ccoyo">Luis Ivan jallo ccoyo</option><option value="Reyna Mejia">Reyna Mejia</option><option value="Maryoiry Leo Rafae Admin">Maryoiry Leo Rafae Admin</option><option value="Edwin Cusi">Edwin Cusi</option><option value="Ester Milagros">Ester Milagros</option><option value="Luz Victoria">Luz Victoria</option><option value="Emily Arlyn">Emily Arlyn</option><option value="Roy briceño">Roy briceño</option><option value="Geancarlo ynquel">Geancarlo ynquel</option><option value="Gustavo cruz">Gustavo cruz</option><option value="admin">Admin</option></select>
       <input id="passInput" type="password" placeholder="Contraseña" class="w-full px-4 py-3"/>
       <div id="loginError" class="text-xs text-red-500 hidden px-2"></div>
       <button id="loginBtn" class="w-full py-3 btn-primary">Entrar</button>
@@ -216,30 +216,7 @@ function showToast(msg){ const t=document.getElementById('toast'); t.textContent
 
 function saveToLocal(){ try{ localStorage.setItem('conexzion_jovenes', JSON.stringify(RAW_JOVENES)); localStorage.setItem('conexzion_lideres', JSON.stringify(LIDERES)); localStorage.setItem('conexzion_zonas', JSON.stringify(ZONAS)); localStorage.setItem('conexzion_programa', JSON.stringify(PROGRAMA)); }catch(e){} }
 function loadFromLocal(){ try{ const j=localStorage.getItem('conexzion_jovenes'); if(j) RAW_JOVENES=JSON.parse(j); const l=localStorage.getItem('conexzion_lideres'); if(l) LIDERES=JSON.parse(l); const z=localStorage.getItem('conexzion_zonas'); if(z) ZONAS=JSON.parse(z); const p=localStorage.getItem('conexzion_programa'); if(p) PROGRAMA={...PROGRAMA, ...JSON.parse(p)}; }catch(e){} }
-function populateLoginSelect(){
-  try{
-    const sel=document.getElementById('userSelect');
-    if(!sel) return;
-    const currentVal=sel.value;
-    sel.innerHTML='<option value="">Selecciona tu nombre</option>';
-    // Agregar líderes activos y no activos también para que puedan ingresar si luego se activan, pero ordenados
-    const sorted=[...LIDERES].sort((a,b)=>a.nombre.localeCompare(b.nombre));
-    sorted.forEach(l=>{
-      const opt=document.createElement('option');
-      opt.value=l.nombre;
-      opt.textContent=l.nombre + (l.activo?'':' (Inactivo)');
-      sel.appendChild(opt);
-    });
-    const adminOpt=document.createElement('option');
-    adminOpt.value='admin';
-    adminOpt.textContent='Admin';
-    sel.appendChild(adminOpt);
-    // Restaurar selección si existía
-    if(currentVal) sel.value=currentVal;
-  }catch(e){}
-}
 loadFromLocal();
-populateLoginSelect();
 // intentar restaurar sesión al refrescar
 setTimeout(()=>{ restoreSession(); }, 50);
 
@@ -295,7 +272,6 @@ function logout(){
   currentUser=null; currentRole=null;
   document.getElementById('appScreen').classList.add('hidden'); 
   document.getElementById('loginScreen').classList.remove('hidden'); 
-  populateLoginSelect();
   document.getElementById('userSelect').value=''; 
   document.getElementById('passInput').value=''; 
 }
@@ -532,7 +508,7 @@ function saveLider(){
   const data = {nombre: document.getElementById('nl-nombre').value.trim(), cargo: document.getElementById('nl-cargo')?.value||'LIDER', genero: document.getElementById('nl-genero').value, celular: document.getElementById('nl-celular').value, cumple: document.getElementById('nl-cumple').value, direccion: document.getElementById('nl-direccion').value, rol: document.getElementById('nl-rol').value, password: document.getElementById('nl-password').value, zona: document.getElementById('nl-zona').value, notas: document.getElementById('nl-notas').value, activo: isAdmin()?document.getElementById('nl-activo')?.checked||true:true, foto: tempLider.foto||'', cumpleMensajePersonal: tempLider.cumpleMensajePersonal||''};
   if(!data.nombre) { showToast('Nombre requerido'); return; }
   if(editingLiderId){ const idx=LIDERES.findIndex(l=>l.id===editingLiderId); if(idx>=0) LIDERES[idx]={...LIDERES[idx], ...data}; } else { const id='l'+Date.now(); LIDERES.push({id, ...data}); }
-  saveToLocal(); populateLoginSelect(); closeModalLider(); renderTab(isAdmin()?'lideres':'miperfil'); showToast('Líder guardado ✅');
+  saveToLocal(); closeModalLider(); renderTab(isAdmin()?'lideres':'miperfil'); showToast('Líder guardado ✅');
 }
 let tempJoven={};
 function openModalJoven(id=null){
