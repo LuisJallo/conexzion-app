@@ -1,12 +1,17 @@
 {
+  "id": "/",
   "name": "Conexzion",
   "short_name": "Conexzion",
   "description": "Gestión de jóvenes y líderes - Iglesia Conexzion",
   "start_url": "/?source=pwa",
+  "scope": "/",
   "display": "standalone",
+  "display_override": ["standalone", "window-controls-overlay"],
   "background_color": "#F8FAFC",
   "theme_color": "#0F172A",
   "orientation": "portrait",
+  "categories": ["productivity", "lifestyle", "business"],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "icon-192.png",
@@ -19,6 +24,29 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Inicio de Conexzion"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Dashboard Conexzion"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Ver jóvenes",
+      "url": "/?tab=jovenes",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
     }
   ]
 }
